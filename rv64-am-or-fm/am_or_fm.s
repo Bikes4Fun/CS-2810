@@ -17,5 +17,5 @@ am_or_fm:
     blt a0, t0, 5f  # if a0 less than FM min, branch to 5. 
     li a0, 2        # a0 was less than or equal to FM max. and it was not less than FM min.
     ret
-5:  li, a0, 0
+5:  li a0, 0
     ret
