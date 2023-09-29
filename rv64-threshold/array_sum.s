@@ -4,9 +4,14 @@
 # int array_sum(int *array, int count, int threshold)
 array_sum:
         # a0 array address
-        # a1 number in array
+        # a1 len of array
         # a2 threshold - sum elements greater or equal 
-        #  
+        # a3 sum - current total sum - initiate at 0
+        # t0 i: counter to += each iteration while < a1 len of array
+        # t1 increment register address by counter * increment
+
+        li a3, 0
+        mv a0, a3
         ret
 
 
