@@ -3,4 +3,37 @@
 
 # int array_sum(int *array, int count, int threshold)
 array_sum:
-                ret
+        # a0 array address
+        # a1 number in array
+        # a2 threshold - sum elements greater or equal 
+        #  
+        ret
+
+
+# count some of the values in an array.
+# implement int array_count(int *array, int count, int threshold)
+#     x`int` values mean 64-bit integers
+
+# array: address of array of 64-bit integers
+# count: number of entries in the array
+#     total memory used by the array is `8 × count`
+# threshold: lowest int to sum greater or equal ints
+
+# compute and return:
+#     sum of elements in array greater or equal to `threshold`.
+#     Ignore values in array less than `threshold`.
+
+# Pseudo-code:
+# int array_count(int *array, int count, int threshold) {
+#     sum = 0
+#     for i = 0; i < count; i++ {
+#     '''if array[i] >= threshold {
+#             sum += array[i]
+#         }
+#     }
+#     return sum
+# }
+
+# leaf function:
+#     no need to set up a stack frame.
+#     do everything using scratch registers.
