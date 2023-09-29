@@ -11,11 +11,31 @@ array_sum:
         # t1 increment register address by counter * increment
         # t3 current value
 
-        li a3, 0
-        ld t3, 0(a0)
-        add a3, a3, t3
-        mv a0, a3
-        ret
+        li a3, 0        #load SUM as 0
+        ld t3, 0(a0)    #load CURRENT as 0
+        li t0, 1        #load COUNTER as 0 !!!!!! testing w 1
+        li t1, 8        #load register incrementer as 8
+        #if a0 > a2: add a2 to t2: else make a0 = 33: return
+	
+        bgt a1, t0, 3f
+        bge t3, a2, 1f
+	
+        ld t3, 8(a0)
+	li t0, 2
+	
+        bgt a1, t0, 3f
+        bge t3, a2, 1f
+	
+        ld t3, 16(a0) #load our current value 16 beyond a0
+        li t0, 3
+	bgt, a1, t0, 2f #if temporary i counter is greater than len array, branch and return
+	bge t3, a2, 1f
+3:      li a0, 33
+        j 1
+2:	add a3, a3, a0  #to our total(a3) load current(t3)
+        j 3
+	mv a0, a3
+1:      ret
 
 
 # count some of the values in an array.
