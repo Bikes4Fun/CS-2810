@@ -9,8 +9,11 @@ array_sum:
         # a3 sum - current total sum - initiate at 0
         # t0 i: counter to += each iteration while < a1 len of array
         # t1 increment register address by counter * increment
+        # t3 current value
 
         li a3, 0
+        ld t3, 0(a0)
+        add a3, a3, t3
         mv a0, a3
         ret
 
