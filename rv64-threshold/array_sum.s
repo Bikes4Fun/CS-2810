@@ -15,26 +15,20 @@ array_sum:
         ld t3, 0(a0)    #load CURRENT as 0
         li t0, 1        #load COUNTER as 0 !!!!!! testing w 1
         li t1, 8        #load register incrementer as 8
-        #if a0 > a2: add a2 to t2: else make a0 = 33: return
-	
-        bgt a1, t0, 3f
-        bge t3, a2, 1f
-	
-        ld t3, 8(a0)
-	li t0, 2
-	
-        bgt a1, t0, 3f
-        bge t3, a2, 1f
-	
-        ld t3, 16(a0) #load our current value 16 beyond a0
-        li t0, 3
-	bgt, a1, t0, 2f #if temporary i counter is greater than len array, branch and return
-	bge t3, a2, 1f
-3:      li a0, 33
-        j 1
-2:	add a3, a3, a0  #to our total(a3) load current(t3)
-        j 3
-	mv a0, a3
+        ##if a0 > a2: add a2 to t2: else make a0 = 33: return
+        
+        bge t3, a2, 2f  #if current(t3) >= threshold(a2) branch and add, then return
+        
+        ld t3, 8(a0)    #manually load a new item into current
+        bge t3, a2, 2f  #if new current(t3) >= threshold(a2) branch and add
+        
+        ld t3, 16(a0)   #load our current value 16 beyond a0
+	bge t3, a2, 2f
+
+3:      li a0, 33       #if none of them are >=, make a0 33
+        j 1             #jump to return
+2:	add a3, a3, t3  #to total(a3) load current(t3)
+	mv a0, a3       #move sum to return
 1:      ret
 
 
