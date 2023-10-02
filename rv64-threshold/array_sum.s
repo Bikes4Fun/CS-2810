@@ -15,26 +15,29 @@ array_sum:
                 # 2  = exit
 
                 # |--- initiate variables ---|
-                addi    a3, a0, 0       # move address of a0 to new register
+             
                 ld      a4, 0(a0)       # initiate current to value of a0
-                li      a0, 0           # initiate sum/return register to 0
+                li      a3, 0           # initiate sum/return register to 0
                 li      t0, 0           # initiate i counter to 0
-                li      t1, 0                # do nothing with tX, but visualize its use as a temp
+                li      t1, 0           # do nothing with tX, but visualize its use as a temp
 
                 # |--- initiate while loop ---|
         1:      bge     t0, a1, 2f         # if i >= size of array, branch to exit
 
                 # |---validated while loop---|
                 slli    t1, t0, 3         # calculate incrementor of new address: i * 2^3 ?
-                add     t1, a3, t1         # temp = address of new current = address of start plus incrementor 
-                ld      a4, 0(a3)           # current = address start[0]
+                add     t1, a0, t1         # temp = address of new current = address of start plus incrementor 
+                ld      a4, 0(t1)           # current = address start[0]
                 addi    t0, t0, 1         # i+=1
 
                 # |--- if: current >= threshold else ---|
-                blt     a4, a1, 1          # if: current < threshold, start over, else: continue
-                add     a0, a4, a4         # else: sum += current
-                j       1
-        2:      ret
+                blt     a4, a2, 1b          # if: current < threshold, start over, else: continue
+                add     a2, a2, a4         # else: sum += current
+                j       1b
+        2:      
+		mv	a0, a2
+                ret
+
 
 
 # count some of the values in an array.
