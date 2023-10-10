@@ -15,8 +15,9 @@ count_jumps:
 	   	sub a3, a1, t0 
 		addi a4, a3, 0      
 	2:   	bltz a3, 1f       #if a3(index) < 0: break
-	   	blt a4, a3, 1f    #if a4(max) < a3(index) break 
-	   	sll t0, a0, a3      #t0 = address of a0 shifted index amount?
+	   	blt a4, a3, 1f    #if a4(max) < a3(index) break
+		slli t0, a3, 0 	#t0 = address of a0 shifted index amount? 
+	   	add t0, a0, t0      #t0 = address of a0 shifted index amount?
            	ld t0, 0(t0)        #t0 = value at t0 
 	   	add a3, a3, t0      #a3 = index + t0 (current value at array[index])
 	   	addi a2, a2, 1
