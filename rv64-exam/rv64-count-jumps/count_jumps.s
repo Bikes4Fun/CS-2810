@@ -19,11 +19,9 @@ count_jumps:
 		slli t0, a3, 0 	#t0 = address of a0 shifted index amount? 
 	   	add t0, a0, t0      #t0 = address of a0 shifted index amount?
            	ld t0, 0(t0)        #t0 = value at t0
-		sltiu t0, t0,  0
-		j 1f
 		addi t1, a3, 0
-		add a3, t1, t0      #a3 = index + t0 (current value at array[index])
+		add a3, t1, t0    #a3 = index + t0 (current value at array[index])
 		addi a2, a2, 1
 		j 2b
-	1:	mv a0, t0                
+	1:	mv a0, a2                
 	ret
