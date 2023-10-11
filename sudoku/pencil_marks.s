@@ -22,8 +22,8 @@ count_bits:
         ld  t1, 0(t1)   # mask value = value at a0[i], which is stored in t1  
         and t1, a0, t1  # temp = function arument & mask value
         beqz t1, 3f     # if temp == 0: branch to next
-        addi a1, 1      # else: count += 1
-    3:  addi a2, 1      # next: index += 1
+        addi a1, a1, 1      # else: count += 1
+    3:  addi a2, a1, 1      # next: index += 1
         j 1b            # jump to 'while' loop
     
     2:  mv a0, a1
