@@ -17,14 +17,17 @@ count_bits:
         li a2, 0        # index = 0
         li a3, 9        # range max = 9
 
-    1:  bgt a2, a3, 2f  # if index >= range max: branch to exit sequence, else continue with 'while'
+    1:  bgt a2, a3, 2f  # if index > range max: branch to exit sequence, else continue 'while'
         sll t1, a0, a2  # mask = 1<<index, or address of a[i]
         ld  t1, 0(t1)   # mask value = value at a0[i], which is stored in t1  
         and t1, a0, t1  # temp = function arument & mask value
-        beqz t1, 3f     # if temp == 0: branch to next
-        addi a1, a1, 1      # else: count += 1
-    3:  addi a2, a1, 1      # next: index += 1
+        bnez t1, 3f     # if temp != 0: branch to next
+    
+    4:  addi a2, a2, 1  # next: index += 1
         j 1b            # jump to 'while' loop
+    
+    3:  addi a1, a1, 1  # else: count += 1
+        j 4b
     
     2:  mv a0, a1
         ret
