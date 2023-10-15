@@ -10,16 +10,17 @@ count_bits:
         #             count += 1
         #         index += 1
         #     return count
-
+        
         li t0, 0        # val to AND with bit 
         li t1, 0        # store incrementer, store current, store bool(n[0] AND 0)
         li a1, 0        # count = 0
         li a2, 0        # index = 0
         li a3, 9        # range max = 9
+        beqz a0, 2f
 
     1:  bgt a2, a3, 2f  # if index > range max: branch to exit sequence, else continue 'while'
         sll t1, a0, a2  # mask = 1<<index, or address of a[i]
-        ld  t1, 0(t1)   # mask value = value at a0[i], which is stored in t1  
+        #ld  t1, 0(t1)   # mask value = value at a0[i], which is stored in t1  
         and t1, a0, t1  # temp = function arument & mask value
         bnez t1, 3f     # if temp != 0: branch to next
     
