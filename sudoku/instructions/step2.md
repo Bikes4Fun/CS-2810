@@ -45,7 +45,7 @@ positions are zeros.
 The following pseudo-code will help you get started:
 
 ```
-get_used(board, group) -> used 
+get_used(board, group) -> used
     used = 0
     for group_index = 0; group_index < 9; group_index++
         board_index = group[group_index]
