@@ -65,9 +65,11 @@ get_used:
             li      s0, 0            # used
             li      s1, 0            # iter
             li      s2, 9            # max
-    1:      bgt     s2, 2f
+    1:      bgt     s1, s2, 2f
             add     t0, a1, s1       # t0 = address of number needed from table: table + index
             lb      t0, 0(t0)        # t0 = element in table address
+            addi    s1, s1, 1
+            j       1b
     2:      mv      a0, t0
             
             # postlude
