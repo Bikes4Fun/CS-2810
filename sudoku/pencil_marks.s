@@ -68,6 +68,8 @@ get_used:
     1:      bgt     s1, s2, 2f
             add     t0, a1, s1       # t0 = address of number needed from table: table + index
             lb      t0, 0(t0)        # t0 = element in table address
+            add     t0, a0, t0
+            lb      t0, 0(t0)
             addi    s1, s1, 1
             j       1b
     2:      mv      a0, t0
