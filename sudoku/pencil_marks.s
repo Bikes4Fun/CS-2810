@@ -34,6 +34,26 @@ count_bits:
 
 # get_used(board, group) -> used
 get_used:
+    # used = 0
+    # for group_index = 0; group_index < 9; group_index++
+    #     board_index = group[group_index]  #iterate through groups. board_index = group 0, 1, 2 ...
+    #     element = board[board_index]      #iterate through boards? elem = board 0, 1, 2, etc           
+
+    #     # note: looking up an element (the two lines above)
+    #     # is really a 5-step process detailed here:
+    #     group_element_address = group + group_index
+    #     board_index = lb (group_element_address)
+    #     scaled_board_index = board_index << 1
+    #     board_element_address = board + scaled_board_index
+    #     element = lh (board_element_address)
+
+    #     # count the number of set bits in the element
+    #     count = count_bits(element)
+
+    #     if count == 1 (indicating a solved square):
+    #         used = used | element
+
+    # return used
                 ret
 
 # clear_used(board, group, used)
