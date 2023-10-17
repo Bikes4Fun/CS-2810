@@ -63,19 +63,20 @@ get_used:
             sd      s0, 0(sp)
 
             mv      s0, a0
-            li      s1, 0            # iter
+            mv      s1, a1
+            li      s4, 0            # iter
             li      s2, 9            # max
             li      s3, 0            # used
 
-    1:      bgt     s1, s2, 2f
-            add     t0, a1, s1       # t0 = address of number needed from table: table + index
+    1:      bgt     s4, s2, 2f
+            add     t0, s1, s4       # t0 = address of number needed from table: table + index
             lb      t0, 0(t0)        # t0 = element in table address
-            add     t0, a0, t0
+            add     t0, s0, t0
             lb      t0, 0(t0)
             mv      a0, t0
             call count_bits
             add     s3, s3, a0
-            addi    s1, s1, 1
+            addi    s4, s4, 1
             j       1b
     2:      mv      a0, s3
             
