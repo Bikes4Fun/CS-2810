@@ -34,27 +34,51 @@ count_bits:
 
 # get_used(board, group) -> used
 get_used:
-    # used = 0
-    # for group_index = 0; group_index < 9; group_index++
-    #     board_index = group[group_index]  #iterate through groups. board_index = group 0, 1, 2 ...
-    #     element = board[board_index]      #iterate through boards? elem = board 0, 1, 2, etc           
+            #                       64
+            #       +-------------+
+            #       | saved ra    | 56
+            #       +-------------+
+            #       | saved s4    | 48
+            #       +-------------+
+            #       | saved s3    | 40
+            #       +-------------+
+            #       | saved s2    | 32
+            #       +-------------+
+            #       | saved s1    | 24
+            #       +-------------+
+            #       | saved s0    | 16
+            #       +-------------+
+            #       |             | 8
+            #       +-------------+
+            # sp -> |             | 0
+            #       +-------------+
 
-    #     # note: looking up an element (the two lines above)
-    #     # is really a 5-step process detailed here:
-    #     group_element_address = group + group_index
-    #     board_index = lb (group_element_address)
-    #     scaled_board_index = board_index << 1
-    #     board_element_address = board + scaled_board_index
-    #     element = lh (board_element_address)
+            #prelude
+            addi    sp, sp, -48
+            sd      ra, 40(sp)
+            sd      s4, 32(sp)
+            sd      s3, 24(sp)
+            sd      s2, 16(sp)
+            sd      s1, 8(sp)
+            sd      s0, 0(sp)
 
-    #     # count the number of set bits in the element
-    #     count = count_bits(element)
-
-    #     if count == 1 (indicating a solved square):
-    #         used = used | element
-
-    # return used
-                ret
+            li      s0, 0            # used
+            li      s1, 0            # iter
+            li      s2, 9            # max
+    1:      bgt     s2, 2f
+            add     t0, a1, s1       # t0 = address of number needed from table: table + index
+            lb      t0, 0(t0)        # t0 = element in table address
+    2:      mv      a0, t0
+            
+            # postlude
+            addi    sp, sp, 48
+            ld      ra, 40(sp)
+            ld      s4, 32(sp)
+            ld      s3, 24(sp)
+            ld      s2, 16(sp)
+            ld      s1, 8(sp)
+            ld      s0, 0(sp)
+            ret
 
 # clear_used(board, group, used)
 clear_used:

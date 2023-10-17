@@ -36,30 +36,49 @@
 # The following pseudo-code will help you get started:
 # ```
 
-def get_used(board_address, current_row): #-> used
-    used = 0
-    group_iter_index = 0
-   
-    while (group_iter_index < 9): #group_iter_index+=1
-        #current_square = current_row[group_iter_index]
-        #element = board_address[current_square]
+def get_used(board_address, current_row):
+    used = 0                                            #   li 0                
+    group_iter_index = 0                                #   li 0
+                                                        #   li 9
+    while (group_iter_index < 9):                       #1: bge 9
+        c = current_row[group_iter_index]               #   sll c,row,iter                                              #
+        c = current_row + c                             #   add c, row, c
+        calc_sq_address = c                             #    
+        current_num_address = calc_sq_address << 1
+        element = board_address + current_num_address
         
-        calculate_square_address = (current_row + current_row[group_iter_index]) #lb.  
-        current_square_address = calculate_square_address << 1
-        element_address = board_address + current_square_address
-        
-        element = (element_address) #lh 
-        count = count_bits(element) # count the number of set bits in the element
+        a0 = element #lh 
+        count = count_bits(a0) 
+        group_iter_index+=1
 
-        if count == 1: #(indicating a solved square):
+        if count == 1: 
             used = used+1
         else: 
             used = used+0
-        group_iter_index+=1
     return used
+
+    # used = 0
+    # for group_index = 0; group_index < 9; group_index++
+    #     board_index = group[group_index]  #iterate through groups. board_index = group 0, 1, 2 ...
+    #     element = board[board_index]      #iterate through boards? elem = board 0, 1, 2, etc           
+    #     # note: looking up an element (the two lines above)
+    #     # is really a 5-step process detailed here:
+    #     group_element_address = group + group_index
+    #     board_index = lb (group_element_address)
+    #     scaled_board_index = board_index << 1
+    #     board_element_address = board + scaled_board_index
+    #     element = lh (board_element_address)
+    #     # count the number of set bits in the element
+    #     count = count_bits(element)
+    ##     if count == 1 (indicating a solved square):
+    #         used = used | element
+    # return used
+
+
 
 def count_bits():
     pass
+
 # Note that this is a non-leaf function, so you will need to set up a
 # stack frame.
 
@@ -70,3 +89,30 @@ def count_bits():
 # verify the correct set of solved squares. It will then print the
 # result of calling `get_used`, both as a single decimal integer and
 # as the set of digits that number represents.
+
+#                       64
+#       +-------------+
+#       | saved ra    | 56
+#       +-------------+
+#       | saved s4    | 48
+#       +-------------+
+#       | saved s3    | 40
+#       +-------------+
+#       | saved s2    | 32
+#       +-------------+
+#       | saved s1    | 24
+#       +-------------+
+#       | saved s0    | 16
+#       +-------------+
+#       |             | 8
+#       +-------------+
+# sp -> |             | 0
+#       +-------------+
+
+# addi    sp, sp, -64
+# sd      ra, 56(sp)
+# sd      s4, 48(sp)
+# sd      s3, 40(sp)
+# sd      s2, 32(sp)
+# sd      s1, 24(sp)
+# sd      s0, 16(sp)
