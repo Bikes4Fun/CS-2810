@@ -64,21 +64,22 @@ get_used:
 
             mv      s0, a0
             mv      s1, a1
-            li      s2, 9            # max
+            #       s2 = value for count bits to count
             li      s3, 0            # used
             li      s4, 0            # iter
-            li      s5, 1            # check == 1
 
-    1:      bgt     s4, s2, 2f
+    1:      li      t0, 9
+            bgt     s4, t0, 2f
             add     t0, s1, s4       # t0 = address of number needed from table: table + index
             lb      t0, 0(t0)        # t0 = element in table address
             slli    t0, t0, 1        # t0 = a0 shifted t0 times
             add     t0, s0, t0       
-            lh      t0, 0(t0)
-            mv      a0, t0
+            lh      s2, 0(t0)
+            mv      a0, s2
             call count_bits
-            bne     a0, s5, 3f
-            add     s3, s3, a0
+            li      t0, 1
+            bne     a0, t0, 3f
+            or      s3, s3, s2
     3:      addi    s4, s4, 1        # Return the “used” list as a set with one bit per used number (currently returning total used)
             j       1b
     2:      mv      a0, s3
