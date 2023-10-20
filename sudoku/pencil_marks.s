@@ -72,6 +72,7 @@ get_used:
     1:      bgt     s4, s2, 2f
             add     t0, s1, s4       # t0 = address of number needed from table: table + index
             lb      t0, 0(t0)        # t0 = element in table address
+            #sll     t0, s0, t0       # t0 = a0 shifted t0 times
             add     t0, s0, t0
             lb      t0, 0(t0)
             mv      a0, t0
