@@ -85,13 +85,13 @@ get_used:
     2:      mv      a0, s3
             
             # postlude
-            addi    sp, sp, 48
             ld      ra, 40(sp)
             ld      s4, 32(sp)
             ld      s3, 24(sp)
             ld      s2, 16(sp)
             ld      s1, 8(sp)
             ld      s0, 0(sp)
+            addi    sp, sp, 48
             ret
 
 # clear_used(board, group, used)
