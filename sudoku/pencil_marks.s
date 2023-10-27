@@ -168,7 +168,6 @@ clear_used:
             ld      s0, 0(sp)
             addi    sp, sp, 56
             ret             
- 
 
 # pencil_marks(board, table)
 pencil_marks:
