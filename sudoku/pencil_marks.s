@@ -116,8 +116,10 @@ clear_used:
             # sp -> |             | 0
 		
             #prelude
-            addi    sp, sp, -56
-            sd      ra, 48(sp)
+            addi    sp, sp, -72
+            sd      ra, 64(sp)
+            sd      s7, 56(sp)
+            sd      s6, 48(sp)
             sd      s5, 40(sp)
             sd      s4, 32(sp)
             sd      s3, 24(sp)
@@ -132,6 +134,7 @@ clear_used:
             li      s3, 0         # group_index
             li      s4, 0         # changes
             #       s5            # element
+            #       s6            # element address
             li      t0, 9         # iteration max
             #       t1            # board_index
             #       t2            # element
@@ -143,8 +146,9 @@ clear_used:
             add     t1, s1, s3    # t1 = group + iteration count 
             lb      t1, 0(t1)     # t1 = value at table address
             slli    t1, t1, 1     # t1 = t1 shifted 1 times
-            add     t1, s0, t1
-            lh      s5, 0(t1)     # element = board[board_index] and save element address 
+            add     t1, s0, t1    #
+            mv      s6, t1        # save element address
+            lh      s5, 0(t1)     # element = board[board_index] 
             mv      a0, s5
             call count_bits        
             mv      t3, a0
@@ -152,23 +156,25 @@ clear_used:
             beq     t3, t0, 3f
             and     t3, s5, s2    # new_element = clear the bits indicated by used
             beq     t3, s5, 3f    # continue if bits need to be cleared
-            mv      s5, t3        # board[board_index] = new_element
+            sh      t3, (s6)      # board[board_index] = new_element
             li      s4, 1
-    3:      addi    s3, s3, 1         # group_index iterate counter ++
+    3:      addi    s3, s3, 1      # group_index iterate counter ++
             j       1b
             # |+--- end loop ---+|
 
     2:      mv      a0, s4
            
             # postlude
-            ld      ra, 48(sp)
+            ld      ra, 64(sp)
+            ld      s7, 56(sp)
+            ld      s6, 48(sp)
             ld      s5, 40(sp)
             ld      s4, 32(sp)
             ld      s3, 24(sp)
             ld      s2, 16(sp)
             ld      s1, 8(sp)
             ld      s0, 0(sp)
-            addi    sp, sp, 56
+            addi    sp, sp, 72
             ret             
 
 # pencil_marks(board, table)
