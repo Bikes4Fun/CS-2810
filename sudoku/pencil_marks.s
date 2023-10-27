@@ -144,12 +144,15 @@ clear_used:
             lb      t1, 0(t1)     # t1 = value at table address
             slli    t1, t1, 1     # t1 = t1 shifted 1 times
             add     t1, s0, t1
-            lh      s3, 0(t1)
-            mv      a0, s3
+            lh      s5, 0(t1)     # save element address 
+            mv      a0, s5
             call count_bits        
             mv      t3, a0
-
-            addi    s3, s3, 1         # group_index iterate counter ++
+            li      t0, 1
+            beq     t3, t0, 3f
+            and     t3, s5, s2
+            li      s4, 1
+    3:      addi    s3, s3, 1         # group_index iterate counter ++
             j       1b
             # |+--- end loop ---+|
 
