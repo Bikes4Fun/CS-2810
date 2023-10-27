@@ -144,13 +144,15 @@ clear_used:
             lb      t1, 0(t1)     # t1 = value at table address
             slli    t1, t1, 1     # t1 = t1 shifted 1 times
             add     t1, s0, t1
-            lh      s5, 0(t1)     # save element address 
+            lh      s5, 0(t1)     # element = board[board_index] and save element address 
             mv      a0, s5
             call count_bits        
             mv      t3, a0
             li      t0, 1
             beq     t3, t0, 3f
-            and     t3, s5, s2
+            and     t3, s5, s2    # new_element = clear the bits indicated by used
+            beq     t3, s5, 3f    # continue if bits need to be cleared
+            mv      s5, t3        # board[board_index] = new_element
             li      s4, 1
     3:      addi    s3, s3, 1         # group_index iterate counter ++
             j       1b
