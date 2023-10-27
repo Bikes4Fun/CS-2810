@@ -141,14 +141,6 @@ clear_used:
 
     1:      li      t0, 9         # iteration max
             bge     s3, t0, 2f    # while group index < 9: iterate and group ++
-<<<<<<< Updated upstream
-            add     t1, s1, s3    # t1 = group + iteration count. or t1 = s1[s3] 
-            lb      t1, 0(t1)     # t1 = value at table address
-            slli    t1, t1, 1     # t1 = t1 shifted 1 times
-            add     t1, s0, t1    # board_index = group[group_index]
-            mv      s6, t1        # save element address for area to clear
-            lh      s5, 0(t1)     # element = board[board_index] 
-=======
             #board_index = group[group_index]
             #t1 = s1[s3]
             add     t1, s1, s3    # t1 = group + iteration count
@@ -157,7 +149,6 @@ clear_used:
             add     t1, s0, t1    #
             mv      s6, t1        # save element address
             lh      s5, 0(t1)     # element = board[board_index]
->>>>>>> Stashed changes
             mv      a0, s5
             call count_bits
             mv      t3, a0
