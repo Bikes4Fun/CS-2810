@@ -128,26 +128,40 @@ clear_used:
             mv      s1, a1        # group
             mv      s2, a2        # used
             not     s2, s2        # used' (not used)
-            #       s3            # group_index
+            li      s3, 0         # group_index & # element
             li      s4, 0         # changes
             li      t0, 9         # iteration max
             #       t1            # board_index
             #       t2            # element
             
-            lb      a0, 0(s0)
+    1:      li      t0, 9         # iteration max
+            bge     s3, t0, 2f    # while group index < 9: iterate and group ++
+            #board_index = group[group_index]
+            #t1 = s1[s3]
+            add     t1, s1, s3    # t1 = group + iteration count 
+            lb      t1, 0(t1)     # t1 = value at table address
+            slli    t1, t1, 1     # t1 = t1 shifted 1 times
+            add     t1, s0, t1
+            lh      s3, 0(t1)
+            mv      a0, s3
             call count_bits        
             mv      t3, a0
-            mv      a0, s4
+
+            addi    s3, 1         # group_index iterate counter ++
+            j       1b
+            # |+--- end loop ---+|
+
+    2:      mv      a0, s4
            
-           # postlude
-           ld      ra, 40(sp)
-           ld      s4, 32(sp)
-           ld      s3, 24(sp)
-           ld      s2, 16(sp)
-           ld      s1, 8(sp)
-           ld      s0, 0(sp)
-           addi    sp, sp, 48
-           ret             
+            # postlude
+            ld      ra, 40(sp)
+            ld      s4, 32(sp)
+            ld      s3, 24(sp)
+            ld      s2, 16(sp)
+            ld      s1, 8(sp)
+            ld      s0, 0(sp)
+            addi    sp, sp, 48
+            ret             
  
 
 # pencil_marks(board, table)
