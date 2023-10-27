@@ -96,7 +96,59 @@ get_used:
 
 # clear_used(board, group, used)
 clear_used:
-                ret
+
+# 64
+            #       +-------------+
+            #       | saved ra    | 56
+            #       +-------------+
+            #       | saved s4    | 48
+            #       +-------------+
+            #       | saved s3    | 40
+            #       +-------------+
+            #       | saved s2    | 32
+            #       +-------------+
+            #       | saved s1    | 24
+            #       +-------------+
+            #       | saved s0    | 16
+            #       +-------------+
+            #       |             | 8
+            #       +-------------+
+            # sp -> |             | 0
+		
+            #prelude
+            addi    sp, sp, -48
+            sd      ra, 40(sp)
+            sd      s4, 32(sp)
+            sd      s3, 24(sp)
+            sd      s2, 16(sp)
+            sd      s1, 8(sp) 
+            sd      s0, 0(sp)
+            
+            mv      s0, a0        # board          
+            mv      s1, a1        # group
+            mv      s2, a2        # used
+            not     s2, s2        # used' (not used)
+            #       s3            # group_index
+            li      s4, 0         # changes
+            li      t0, 9         # iteration max
+            #       t1            # board_index
+            #       t2            # element
+            
+            lb      a0, 0(s0)
+            call count_bits        
+            mv      t3, a0
+            mv      a0, s4
+           
+           # postlude
+           ld      ra, 40(sp)
+           ld      s4, 32(sp)
+           ld      s3, 24(sp)
+           ld      s2, 16(sp)
+           ld      s1, 8(sp)
+           ld      s0, 0(sp)
+           addi    sp, sp, 48
+           ret             
+ 
 
 # pencil_marks(board, table)
 pencil_marks:
