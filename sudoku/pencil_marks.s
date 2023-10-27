@@ -129,8 +129,9 @@ clear_used:
             mv      s1, a1        # group
             mv      s2, a2        # used
             not     s2, s2        # used' (not used)
-            li      s3, 0         # group_index & # element
+            li      s3, 0         # group_index
             li      s4, 0         # changes
+            #       s5            # element
             li      t0, 9         # iteration max
             #       t1            # board_index
             #       t2            # element
