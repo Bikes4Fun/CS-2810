@@ -116,8 +116,9 @@ clear_used:
             # sp -> |             | 0
 		
             #prelude
-            addi    sp, sp, -48
-            sd      ra, 40(sp)
+            addi    sp, sp, -56
+            sd      ra, 48(sp)
+            sd      s5, 40(sp)
             sd      s4, 32(sp)
             sd      s3, 24(sp)
             sd      s2, 16(sp)
@@ -147,20 +148,21 @@ clear_used:
             call count_bits        
             mv      t3, a0
 
-            addi    s3, 1         # group_index iterate counter ++
+            addi    s3, s3, 1         # group_index iterate counter ++
             j       1b
             # |+--- end loop ---+|
 
     2:      mv      a0, s4
            
             # postlude
-            ld      ra, 40(sp)
+            ld      ra, 48(sp)
+            ld      s5, 40(sp)
             ld      s4, 32(sp)
             ld      s3, 24(sp)
             ld      s2, 16(sp)
             ld      s1, 8(sp)
             ld      s0, 0(sp)
-            addi    sp, sp, 48
+            addi    sp, sp, 56
             ret             
  
 
