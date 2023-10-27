@@ -124,10 +124,10 @@ clear_used:
             sd      s4, 32(sp)
             sd      s3, 24(sp)
             sd      s2, 16(sp)
-            sd      s1, 8(sp) 
+            sd      s1, 8(sp)
             sd      s0, 0(sp)
-            
-            mv      s0, a0        # board          
+
+            mv      s0, a0        # board
             mv      s1, a1        # group
             mv      s2, a2        # used
             not     s2, s2        # used' (not used)
@@ -138,17 +138,28 @@ clear_used:
             li      t0, 9         # iteration max
             #       t1            # board_index
             #       t2            # element
-            
+
     1:      li      t0, 9         # iteration max
             bge     s3, t0, 2f    # while group index < 9: iterate and group ++
+<<<<<<< Updated upstream
             add     t1, s1, s3    # t1 = group + iteration count. or t1 = s1[s3] 
             lb      t1, 0(t1)     # t1 = value at table address
             slli    t1, t1, 1     # t1 = t1 shifted 1 times
             add     t1, s0, t1    # board_index = group[group_index]
             mv      s6, t1        # save element address for area to clear
             lh      s5, 0(t1)     # element = board[board_index] 
+=======
+            #board_index = group[group_index]
+            #t1 = s1[s3]
+            add     t1, s1, s3    # t1 = group + iteration count
+            lb      t1, 0(t1)     # t1 = value at table address
+            slli    t1, t1, 1     # t1 = t1 shifted 1 times
+            add     t1, s0, t1    #
+            mv      s6, t1        # save element address
+            lh      s5, 0(t1)     # element = board[board_index]
+>>>>>>> Stashed changes
             mv      a0, s5
-            call count_bits        
+            call count_bits
             mv      t3, a0
             li      t0, 1
             beq     t3, t0, 3f
@@ -161,7 +172,7 @@ clear_used:
             # |+--- end loop ---+|
 
     2:      mv      a0, s4
-           
+
             # postlude
             ld      ra, 64(sp)
             ld      s7, 56(sp)
@@ -173,7 +184,7 @@ clear_used:
             ld      s1, 8(sp)
             ld      s0, 0(sp)
             addi    sp, sp, 72
-            ret             
+            ret
 
 # pencil_marks(board, table)
 pencil_marks:
