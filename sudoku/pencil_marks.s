@@ -172,6 +172,15 @@ clear_used:
 # pencil_marks(board, table)
 pencil_marks:
 
+   # changed = 0
+   # group_start = 0
+   # while group_start < 27*9:
+        #  start = table + group_start
+        #  used = get_used(board, start)
+        ## if clear_used(board, used) != 0:
+              # changed = 1
+   # changed
+
     # prelude:
             addi    sp, sp, -72
             sd      ra, 64(sp)
@@ -184,9 +193,22 @@ pencil_marks:
             sd      s1, 8(sp)
             sd      s0, 0(sp)
             
-            li      s2, 0
-            mv      s0, a0
-            mv      s1, a1
+            mv      s0, a0            # board
+            mv      s1, a1            # table
+            li      s2, 0             # changed
+            li      s3, 0             # group_start
+            li      t0, 243           # iterate max
+
+            bgt s3, t0, target        # if s3 > 27*9 then target
+            add     t1, s3, s1        # start (table + group_start)
+            lb      s4, 0(t1)
+
+            #mv      s5, a0            # used = get_used(board, used)
+
+
+
+
+
             mv      a0, s2
 
     # postlude
