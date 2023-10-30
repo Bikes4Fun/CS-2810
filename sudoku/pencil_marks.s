@@ -188,7 +188,7 @@ pencil_marks:
             mv      s0, a0
             mv      s1, a1
             mv      a0, s2
-            
+
     # postlude
             ld      ra, 64(sp)
             ld      s7, 56(sp)
@@ -201,3 +201,5 @@ pencil_marks:
             ld      s0, 0(sp)
             addi    sp, sp, 72
     ret
+
+    
