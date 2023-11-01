@@ -162,9 +162,9 @@ pencil_marks:
         mv      s1, a1            # table
         li      s2, 0             # changed
         li      s3, 0             # group_start
-        li      t0, 243           # iterate max
+        li      s4, 243           # iterate max
         #temps: t1 = start...
-    1:  bgt     s3, t0, 2f        # if s3 > 27*9 then target
+    1:  bgt     s3, s4, 2f        # if s3 > 27*9 then target
         add     t1, s1, s3        # address of start(t1) = (table(s1) + group_start(s3))
         lb      t1, 0(t1)         # load value at start(+iter) address
         slli    t1, t1, 1         # t1 = t1 shifted 1 times
