@@ -179,7 +179,8 @@ pencil_marks:
         call clear_used
         beqz    a0, 3f
         li      s2, 1
-    3:  j       1b
+    3:  addi    s3, 9
+        j       1b
     2:  mv      a0, s2
 
     # postlude
