@@ -199,17 +199,13 @@ pencil_marks:
             li      s3, 0             # group_start
             li      t0, 243           # iterate max
 
-            bgt s3, t0, target        # if s3 > 27*9 then target
+            bgt s3, t0, 2f            # if s3 > 27*9 then target
             add     t1, s3, s1        # start (table + group_start)
             lb      s4, 0(t1)
 
             #mv      s5, a0            # used = get_used(board, used)
 
-
-
-
-
-            mv      a0, s2
+    2:        mv      a0, s2
 
     # postlude
             ld      ra, 64(sp)
