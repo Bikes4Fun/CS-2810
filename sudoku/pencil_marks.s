@@ -142,7 +142,7 @@ pencil_marks:
         # while group_start < 27*9:
             #  start = table + group_start
             #  used = get_used(board, start) pass get used the group to calculate
-            ## if clear_used(board, used) != 0:
+            ## if clear_used(board(a0), table+group_start(a1), used(a2)) != 0:
                 # changed = 1
 
     # prelude:
@@ -163,16 +163,18 @@ pencil_marks:
         li      s2, 0             # changed
         li      s3, 0             # group_start
         li      s4, 243           # iterate max
+        li      s5, 0             # group/start
         #temps: t1 = start...
     1:  bgt     s3, s4, 2f        # if s3 > 27*9 then target
-        add     t1, s1, s3        # address of start(t1) = (table(s1) + group_start(s3))
-        lb      t1, 0(t1)         # load value at start(+iter) address
+        add     s5, s1, s3        # address of start(t1) = (table(s1) + group_start(s3))
+        lb      t1, 0(s5)         # load value at start(+iter) address
         slli    t1, t1, 1         # t1 = t1 shifted 1 times
         add     t1, s0, t1        # ???
         lh      t1, 0(t1)
         mv      a0, t1
         call count_bits
-        mv      a1, a0            # put 'used' into a1 (second placed passing value)
+        mv      a2, a0            # put 'used' into a1 (second placed passing value)
+        mv      a1, s5            # put group into a1 to pass to clear used
         mv      a0, s0            # put my current board back into a0
         call clear_used
         beqz    a0, 3f
