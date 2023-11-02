@@ -166,14 +166,15 @@ pencil_marks:
         li      s5, 0             # group/start
         #temps: t1 = start...
     1:  bgt     s3, s4, 2f        # if s3 > 27*9 then target
-        add     s5, s1, s3        # address of start(t1) = (table(s1) + group_start(s3))
-        lb      t1, 0(s5)         # load value at start(+iter) address
-        slli    t1, t1, 1         # t1 = t1 shifted 1 times
-        add     t1, s0, t1        # ???
-        lh      t1, 0(t1)
-        mv      a0, t1
-        call count_bits
-        mv      a2, a0            # put 'used' into a1 (second placed passing value)
+        add     s5, s1, s3        # address of start(s5) = (table(s1) + group_start(s3))
+        #lb      t1, 0(s5)         # load value at start(+iter) address
+        #slli    t1, t1, 1         # t1 = t1 shifted 1 times
+        #add     t1, s0, t1        # ???
+        #lh      t1, 0(t1)
+        mv      a1, s5
+        mv      a0, s0
+        call get_used
+        mv      a2, a0            # put 'used' into a2 (third placed passing value)
         mv      a1, s5            # put group into a1 to pass to clear used
         mv      a0, s0            # put my current board back into a0
         call clear_used
