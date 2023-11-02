@@ -2,10 +2,15 @@
                 .equ    sys_exit, 93
 
                 .data
-intro_msg:      .asciz  "\nTesting pencil_marks with the following board:\n\n"
-return_msg:     .asciz  "\nThe return value is "
-new_board_msg:  .asciz "After pencil_marks returned the board is now:\n\n"
+msg_pencil:     .asciz  "\nBoard with up-to-date pencil marks:\n"
+test_row_msg:   .asciz  "\nTesting gather_set on row "
+test_col_msg:   .asciz  "\nTesting gather_set on column "
+test_group_msg: .asciz  "\nTesting gather_set on 3x3 group "
+test_key_msg:   .asciz  "Testing with key "
+the_set_msg_1:  .asciz  " (the set "
+the_set_msg_2:  .asciz  ")\n"
 newline:        .asciz  "\n"
+return_val_msg: .asciz  "Return value from gather_set is "
 
                 .text
 _start:
@@ -16,7 +21,6 @@ _start:
 
                 # s0: board
                 # s1: table
-                # s2: return value
 
                 # reserve stack space for a board
                 # 81*2 = 162 so reserve 176
@@ -37,31 +41,87 @@ _start:
                 mv      a0, s1
                 call    make_group_table
 
-                # print the initial board
-                la      a0, intro_msg
-                call    puts
-                mv      a0, s0
-                call    print_board
-
                 # call pencil_marks
 2:              mv      a0, s0
                 mv      a1, s1
-                la      a4, pencil_marks
-                call    call_function
-                mv      s2, a0
-                la      a0, return_msg
-                call    puts
-                mv      a0, s2
-                call    print_n
-                la      a0, newline
-                call    puts
+                call    pencil_marks
 
-                # print the updated board
-                la      a0, new_board_msg
+                # keep repeating until no changes made
+                bnez    a0, 2b
+
+                # print the board
+                la      a0, msg_pencil
                 call    puts
                 mv      a0, s0
                 call    print_board
-                bnez    s2, 2b
+
+                # s2: group_i
+                # s3: key
+                li      s2, 0
+                li      s3, 1
+
+3:              li      t0, 9
+                bge     s2, t0, 4f
+                la      a0, test_row_msg
+                call    puts
+                mv      a0, s2
+                call    print_n
+                j       6f
+
+4:              li      t0, 18
+                bge     s2, t0, 5f
+                la      a0, test_col_msg
+                call    puts
+                addi    a0, s2, -9
+                call    print_n
+                j       6f
+
+5:              la      a0, test_group_msg
+                call    puts
+                addi    a0, s2, -18
+                call    print_n
+
+6:              la      a0, newline
+                call    puts
+                la      a0, test_key_msg
+                call    puts
+                mv      a0, s3
+                call    print_n
+                la      a0, the_set_msg_1
+                call    puts
+                mv      a0, s3
+                call    print_set
+                la      a0, the_set_msg_2
+                call    puts
+
+                # call gather_set
+                mv      a0, s0
+                li      t0, 9
+                mul     t1, s2, t0
+                add     a1, s1, t1
+                mv      a2, s3
+                la      a4, gather_set
+                call    call_function
+                mv      s4, a0
+
+                la      a0, return_val_msg
+                call    puts
+                mv      a0, s4
+                call    print_n
+                la      a0, the_set_msg_1
+                call    puts
+                mv      a0, s4
+                call    print_set
+                la      a0, the_set_msg_2
+                call    puts
+
+                # next
+                addi    s2, s2, 11
+                li      t0, 27
+                rem     s2, s2, t0
+                addi    s3, s3, 23
+                li      t0, 1023
+                blt     s3, t0, 3b
 
                 # clean up stack
                 addi    sp, sp, 256

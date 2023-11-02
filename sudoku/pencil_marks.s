@@ -196,5 +196,3 @@ pencil_marks:
             ld      s0, 0(sp)
             addi    sp, sp, 72
     ret
-
-    
