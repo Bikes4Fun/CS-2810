@@ -33,10 +33,10 @@ gather_set:
         lh      t2, 0(t2)     # element is board[board_index][0] or the value at board[board_index]
 
         #set = set union (OR) element at board[board_index]
-        or      a3, t2
+        or      a3, a3, t2
 
     3:  # index ++, lli a6, a6, 1 or sll a6, index?
-        addi     a4, 1
+        addi     a4, a4, 1
         slli     a6, a6, 1
         j        1b
 
