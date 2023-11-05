@@ -4,6 +4,55 @@
 # gather_set(board, group, key) ->
 #   set of pencil marks for cells identified by key
 gather_set:
+    # gather_set(board, group, key)
+    #     set = 0
+    #     for index = 0; index < 9; index++
+    #         if key & (1<<index) != 0
+    #             board_index = group[index]
+    #             elt = board[board_index]
+    #             set = set | elt
+    #     return set
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 ret
 
 # clear_others(board, group, key, set) ->
