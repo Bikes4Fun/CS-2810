@@ -19,9 +19,9 @@ gather_set:
         li      a3, 0        # set
         li      a4, 0        # iter
         li      a5, 9        # max iter
-        li      a6, 0        # shifted index times
+        li      a6, 1        # shifted index times
 
-    1:  bgt     a4, a5, 2f
+    1:  bge     a4, a5, 2f
         and     t0, a2, a6    # put the tester value of key and shifted value into temp
         beqz    t0, 3f        # if the anded key and shift mask == 0, perform iteration calculations cand mrestart
         
