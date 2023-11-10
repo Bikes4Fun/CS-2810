@@ -24,11 +24,11 @@ gather_set:
     1:  bge     a4, a5, 2f
         and     t0, a2, a6    # put the tester value of key and shifted value into temp
         beqz    t0, 3f        # if the anded key and shift mask == 0, perform iteration calculations cand mrestart
-        
+
         ##else:
         add     t1, a1, a4    # address of lookup table item = group_address(a1) +iteration
         lb      t1, 0(t1)     # value at lookup table item = lookup table address[0]
-        slli    t1, t1, 1     # I still don't understand why we do this enough to expalin it but it's something about the size of the item vs how big the register is. 
+        slli    t1, t1, 1     # I still don't understand why we do this enough to expalin it but it's something about the size of the item vs how big the register is.
         add     t2, a0, t1    # board[board_index] = board address + value at lookup table address
         lh      t2, 0(t2)     # element is board[board_index][0] or the value at board[board_index]
 
@@ -41,7 +41,7 @@ gather_set:
         j        1b
 
     2:  mv a0, a3          # move set to return register
-        ret 
+        ret
 
 
 
