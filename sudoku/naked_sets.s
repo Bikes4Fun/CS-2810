@@ -47,6 +47,20 @@ gather_set:
 #    0: nothing changed
 #    1: something changed
 clear_others:
+    # clear_others(board, group, key, set)
+    #     changed = 0
+    #     notset = ~set (flip all the bits)
+    #     for index = 0; index < 9; index++
+    #         if key & (1<<index) == 0
+    #             board_index = group[index]
+    #             elt = board[board_index]
+    #             new_elt = elt & notset
+    #             if elt != new_elt
+    #                 board[board_index] = new_elt
+    #                 changed = 1
+    #     return changed
+
+
     #a0,                # board
         #a1,                # group
         #a2,                # key
@@ -56,20 +70,6 @@ clear_others:
         li a5, 0            # iter   
         li a6, 1            # shifter
         not a7, a3          # not_set = ~set
-
-
-    clear_others(board, group, key, set)
-        changed = 0
-        notset = ~set (flip all the bits)
-        for index = 0; index < 9; index++
-            if key & (1<<index) == 0
-                board_index = group[index]
-                elt = board[board_index]
-                new_elt = elt & notset
-                if elt != new_elt
-                    board[board_index] = new_elt
-                    changed = 1
-        return changed
 
     # main loop
     1:  li t0, 9            # iter max
