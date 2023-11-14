@@ -101,66 +101,66 @@ single_pass:
 
     # Track and return if changes occured (clear_others)
     # prelude:
-        addi    sp, sp, -72
-        sd      ra, 64(sp)
-        sd      s7, 56(sp)
-        sd      s6, 48(sp)
-        sd      s5, 40(sp)
-        sd      s4, 32(sp)
-        sd      s3, 24(sp)
-        sd      s2, 16(sp)
-        sd      s1, 8(sp)
-        sd      s0, 0(sp)
+    #     addi    sp, sp, -72
+    #     sd      ra, 64(sp)
+    #     sd      s7, 56(sp)
+    #     sd      s6, 48(sp)
+    #     sd      s5, 40(sp)
+    #     sd      s4, 32(sp)
+    #     sd      s3, 24(sp)
+    #     sd      s2, 16(sp)
+    #     sd      s1, 8(sp)
+    #     sd      s0, 0(sp)
 
-    # set variables / registers
-        #a0, board
-        #a1, group
-        mv s0, a0           # saved board
-        mv s1, a1           # saved group
-        #s2-s11
-        li s2, 0            # changes
-        li s3, 0            # iteration
-        li s4, 510          # max iteration
-        # saved register, candidate set
-        # saved register, subset
+    # # set variables / registers
+    #     #a0, board
+    #     #a1, group
+    #     mv s0, a0           # saved board
+    #     mv s1, a1           # saved group
+    #     #s2-s11
+    #     li s2, 0            # changes
+    #     li s3, 0            # iteration
+    #     li s4, 510          # max iteration
+    #     # saved register, candidate set
+    #     # saved register, subset
 
-    1:  #main iteration
+    # 1:  #main iteration
         
-        # Call `count_bits` on the key to see how big the subset is
-            # count_bits(n) -> # of bits set in n (only counting bits 0-9 inclusive)
-        mv a0, s3           # iteration value 1-510 = key. move to a0 as argument for count_bits
-        call count_bits
-        mv subset, a0       # subset is saved for comparing later
+    #     # Call `count_bits` on the key to see how big the subset is
+    #         # count_bits(n) -> # of bits set in n (only counting bits 0-9 inclusive)
+    #     mv a0, s3           # iteration value 1-510 = key. move to a0 as argument for count_bits
+    #     call count_bits
+    #     mv subset, a0       # subset is saved for comparing later
 
-        # Call `gather_set` to gather the candidates present in the pencil marks for those cells
-            # gather_set(board, group, key) ->
-                # set of pencil marks for cells identified by key
-        mv a0, s0           # put board into a0 to call gather_set
-        mv a1, s1           # put group into a1 to call gather_set
-        mv key, subset      # is subset the key passed to gather_set? 
+    #     # Call `gather_set` to gather the candidates present in the pencil marks for those cells
+    #         # gather_set(board, group, key) ->
+    #             # set of pencil marks for cells identified by key
+    #     mv a0, s0           # put board into a0 to call gather_set
+    #     mv a1, s1           # put group into a1 to call gather_set
+    #     mv key, subset      # is subset the key passed to gather_set? 
 
-        # Call `count_bits` on the set that you gathered to see the combined number of candidate values used by that subset
-        call count_bits     # use return from gather_set which is already in a0?
+    #     # Call `count_bits` on the set that you gathered to see the combined number of candidate values used by that subset
+    #     call count_bits     # use return from gather_set which is already in a0?
 
-        # *If: the size of the subset matches the size of the candidate set:
-        bne subset, a0(candidate set), calculate next iteration?
-        # Call `clear_others` to cross those values off any other cells
-            # clear_others(board, group, key, set) ->
-                # 0: nothing changed
-                # 1: something changed
-    #
+    #     # *If: the size of the subset matches the size of the candidate set:
+    #     bne subset, a0(candidate set), calculate next iteration?
+    #     # Call `clear_others` to cross those values off any other cells
+    #         # clear_others(board, group, key, set) ->
+    #             # 0: nothing changed
+    #             # 1: something changed
+    # #
     
-    # postlude
-        ld      ra, 64(sp)
-        ld      s7, 56(sp)
-        ld      s6, 48(sp)
-        ld      s5, 40(sp)
-        ld      s4, 32(sp)
-        ld      s3, 24(sp)
-        ld      s2, 16(sp)
-        ld      s1, 8(sp)
-        ld      s0, 0(sp)
-        addi    sp, sp, 72
+    # # postlude
+    #     ld      ra, 64(sp)
+    #     ld      s7, 56(sp)
+    #     ld      s6, 48(sp)
+    #     ld      s5, 40(sp)
+    #     ld      s4, 32(sp)
+    #     ld      s3, 24(sp)
+    #     ld      s2, 16(sp)
+    #     ld      s1, 8(sp)
+    #     ld      s0, 0(sp)
+    #     addi    sp, sp, 72
 
         ret
 
