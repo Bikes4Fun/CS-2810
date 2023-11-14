@@ -57,19 +57,35 @@ clear_others:
         li a6, 1            # shifter
         not a7, a3          # not_set = ~set
 
+
+    clear_others(board, group, key, set)
+        changed = 0
+        notset = ~set (flip all the bits)
+        for index = 0; index < 9; index++
+            if key & (1<<index) == 0
+                board_index = group[index]
+                elt = board[board_index]
+                new_elt = elt & notset
+                if elt != new_elt
+                    board[board_index] = new_elt
+                    changed = 1
+        return changed
+
     # main loop
     1:  li t0, 9            # iter max
-        bge  a5, t0, 2f
-        and t0, a2, a7      # key && shifter
+        bge  a5, t0, 2f     # return calculations 
+        and t0, a2, a6      # key && shifter
         
         bnez t0, 3f         # if key && shifter == 0: continue, else calculate iteration
-        add t1, a0, a5      # group + iter (address saved for later)
-        lb t2, 0(t1)        # (group+iter)[0]
-        slli t2, t2, 1      # add+lb+slli collectively = 'elt'
+        add t1, a1, a5      # group + iter (address saved for later)
+        lb t1, 0(t1)        # (group+iter)[0]
+        slli t1, t1, 1      # add+lb+slli collectively = 'elt'
+        add  t1, t1, a0
+        lh   t2, 0(t1)      # element
 
         and t3, t2, a7      # new_elt = elt && not_set
         beq t3, t2, 3f      # if elt == new_elt, continue, else calculate nextiteration
-        #load new_elt into address of elt, t1? group+iter?
+        sh  t1, t3  
         li a4, 1            # changed = True
 
     # iteration calculation
