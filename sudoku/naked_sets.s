@@ -67,15 +67,15 @@ clear_others:
         #a3,                # set
 
         li a4, 0            # change
-        li a5, 0            # iter   
+        li a5, 0            # iter
         li a6, 1            # shifter
         not a7, a3          # not_set = ~set
 
     # main loop
     1:  li t0, 9            # iter max
-        bge  a5, t0, 2f     # return calculations 
+        bge  a5, t0, 2f     # return calculations
         and t0, a2, a6      # key && shifter
-        
+
         bnez t0, 3f         # if key && shifter == 0: continue, else calculate iteration
         add t1, a1, a5      # group + iter (address saved for later)
         lb t1, 0(t1)        # (group+iter)[0]
@@ -85,14 +85,14 @@ clear_others:
 
         and t3, t2, a7      # new_elt = elt && not_set
         beq t3, t2, 3f      # if elt == new_elt, continue, else calculate nextiteration
-        sh  t3, (t1)  
+        sh  t3, (t1)
         li a4, 1            # changed = True
 
     # iteration calculation
     3:  addi a5, a5, 1
         slli a6, a6, 1
         j 1b  # jump to target
-        
+
     # return calculation
     2:  mv a0, a4
         ret
@@ -104,7 +104,7 @@ clear_others:
 single_pass:
     # count from 1 to 510 inclusive (511 would have all 9 bits set).
         # This will give us every possible bit pattern with between 1 and 8 bits set.
-        
+
         # iterate over those 510 possible key values.
             # try to identify a naked set for each one.
 
@@ -141,7 +141,7 @@ single_pass:
     #     # saved register, subset
 
     # 1:  #main iteration
-        
+
     #     # Call `count_bits` on the key to see how big the subset is
     #         # count_bits(n) -> # of bits set in n (only counting bits 0-9 inclusive)
     #     mv a0, s3           # iteration value 1-510 = key. move to a0 as argument for count_bits
@@ -153,7 +153,7 @@ single_pass:
     #             # set of pencil marks for cells identified by key
     #     mv a0, s0           # put board into a0 to call gather_set
     #     mv a1, s1           # put group into a1 to call gather_set
-    #     mv key, subset      # is subset the key passed to gather_set? 
+    #     mv key, subset      # is subset the key passed to gather_set?
 
     #     # Call `count_bits` on the set that you gathered to see the combined number of candidate values used by that subset
     #     call count_bits     # use return from gather_set which is already in a0?
@@ -165,7 +165,7 @@ single_pass:
     #             # 0: nothing changed
     #             # 1: something changed
     # #
-    
+
     # # postlude
     #     ld      ra, 64(sp)
     #     ld      s7, 56(sp)
