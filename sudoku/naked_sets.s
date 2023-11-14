@@ -85,7 +85,7 @@ clear_others:
 
         and t3, t2, a7      # new_elt = elt && not_set
         beq t3, t2, 3f      # if elt == new_elt, continue, else calculate nextiteration
-        sh  t1, t3  
+        sh  t3, (t1)  
         li a4, 1            # changed = True
 
     # iteration calculation
