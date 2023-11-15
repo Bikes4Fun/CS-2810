@@ -166,7 +166,7 @@ single_pass:
         mv      a3, s3          # s3 should be subset/current set?
         call    clear_others
         bnez    a0, 2f
-        li      s4, 1
+        mv      s4, a0
 
     2:  #iter   calculations
         addi    s2, s2, 1
