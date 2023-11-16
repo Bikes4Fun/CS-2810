@@ -236,7 +236,7 @@ naked_sets:
         li      s5, 1  
 
     2:  # calculate next loop
-        addi    s2, 9
+        addi    s2, s2, 9
         j       1b
 
     3:  # calculate return
