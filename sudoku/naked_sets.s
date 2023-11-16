@@ -185,7 +185,7 @@ single_pass:
         ld      s0, 0(sp)
         addi    sp, sp, 72
 
-        ret
+    ret
 
 # naked_sets(board, table) -> 0: no change, 1: changed
 naked_sets:
@@ -254,4 +254,4 @@ naked_sets:
         ld      s0, 0(sp)
         addi    sp, sp, 72
 
-        ret
+    ret
