@@ -189,17 +189,15 @@ single_pass:
 
 # naked_sets(board, table) -> 0: no change, 1: changed
 naked_sets:
-
-    # changes = 0
     # iteration: bgt, group_index, 243, return 
-        # add (group_value) = table, group_index
-        # mv a0, s0
-        # mv a1, group_address
-        # call single pass
-        # bnez a0, calculate iteration:
-        # changes = 1
-    # calculate iteration: group_index += 9
-        #j iteration
+            # add (group_value) = table, group_index
+            # mv a0, s0
+            # mv a1, group_address
+            # call single pass
+            # bnez a0, calculate iteration:
+            # changes = 1
+        # calculate iteration: group_index += 9
+            #j iteration
     # return: mv a0, changes
 
     # prelude:
