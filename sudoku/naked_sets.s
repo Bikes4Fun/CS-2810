@@ -131,14 +131,13 @@ single_pass:
         mv      s1, a1          # saved group
         li      s2, 0           # iteration(key)?
         #mv     s3, a0          # subset: return of first count_bits(key) call
-        #mv     s5, a0          # gathered set, return of gather_set(board, group, key) call
-        li      s4, 0           # changes
+        #don't need? mv     s4, a0          # gathered set, return of gather_set(board, group, key) call
+        li      s5, 0           # changes
         #mv     s6, a0          # second call to count_bits?
-        li      t0, 510         # max iteration
+        li      s7, 510         # max iteration
 
-    1:  #main   iteration
-        li      t0, 510         # max iteration
-        bgt     s2, t0, 3f
+    1:  #main   iteration       0-510 inclusive
+        bgt     s2, s7, 3f  
         
     #   call    count_bits:     on the key to see how big the subset is #of bits set in n (only counting bits 0-9 inclusive)
         mv      a0, s2          # iteration value 1-510 = key. move to a0 as argument for count_bits
@@ -150,29 +149,29 @@ single_pass:
         mv      a1, s1          # put group into a1 to call gather_set
         mv      a2, s2          # the key(iteration?) passed to gather_set?
         call    gather_set
-        mv      s5, a0
+        #mv      s4, a0         shouldn't need to save this?
         
     #   call    count_bits:     on gathered to see the combined number of candidate values used by that subset
         call    count_bits      # use return from gather_set which is already in a0?
         mv      s6, a0          # candidate = count_bits second time with gather_set return, obtaining 'candidate'
        
-    #   If      size subset:    matches size of the candidate set:
+    #   If      sets match:     continue, else break (matches size of the candidate set:
         bne     s3, s6, 2f      #calculate next iteration?
         
     #   call    clear_others:   cross values off any other cells: 0: no change / 1: changed
-        mv      a0, s0          # s0 should be board
-        mv      a1, s1          # s1 should be group
+        mv      a0, s0          # should be board
+        mv      a1, s1          # should be group
         mv      a2, s2          # s2 should be key/iter
         mv      a3, s3          # s3 should be subset/current set?
         call    clear_others
-        bnez    a0, 2f
-        mv      s4, a0
+        beqz    a0, 2f          # if 0(no change) perform iteration
+        li      s5, 1
 
     2:  #iter   calculations
         addi    s2, s2, 1
         j       1b
     
-    3:  mv      a0, s4          # if changes from clear others
+    3:  mv      a0, s5          # if changes from clear others
 
     # postlude
         ld      ra, 64(sp)
