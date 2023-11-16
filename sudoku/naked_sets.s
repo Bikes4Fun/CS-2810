@@ -156,7 +156,7 @@ single_pass:
         mv      s6, a0          # candidate = count_bits second time with gather_set return, obtaining 'candidate'
        
     #   If      sets match:     continue, else: break
-        bne     s4, s6, 2f      #calculate next iteration?
+        bne     s3, s6, 2f      #calculate next iteration?
         
     #   call    clear_others:   cross values off cells: 0(no change) 1(changed)
         mv      a0, s0          # should be board
