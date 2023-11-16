@@ -190,18 +190,68 @@ single_pass:
 # naked_sets(board, table) -> 0: no change, 1: changed
 naked_sets:
 
+    # changes = 0
+    # iteration: bgt, group_index, 243, return 
+        # add (group_value) = table, group_index
+        # mv a0, s0
+        # mv a1, group_address
+        # call single pass
+        # bnez a0, calculate iteration:
+        # changes = 1
+    # calculate iteration: group_index += 9
+        #j iteration
+    # return: mv a0, changes
 
+    # prelude:
+        addi    sp, sp, -72
+        sd      ra, 64(sp)
+        sd      s7, 56(sp)
+        sd      s6, 48(sp)
+        sd      s5, 40(sp)
+        sd      s4, 32(sp)
+        sd      s3, 24(sp)
+        sd      s2, 16(sp)
+        sd      s1, 8(sp)
+        sd      s0, 0(sp)
 
+    #set variables/registers
+        #s2-s11
+        #a0     board
+        #a1     table
+        mv      s0, a0
+        mv      s1, a1
+        li      s2, 0           # group_index
+        li      s3, 0           # group_address
+        li      s4, 243         # max iteration/max group index
+        li      s5, 0           # changes
 
+    1:  # while loop
+        bgt     s2, s4, 3f
+        add     s3, s2, s1
+        mv      a0, s0
+        mv      a1, s3
+        call    single_pass
+        
+        bnez    a0, 2f
+        li      s5, 1  
 
+    2:  # calculate next loop
+        addi    s2, 9
+        j       1b
 
+    3:  # calculate return
+        mv      a0, s5
 
+    # postlude
+        ld      ra, 64(sp)
+        ld      s7, 56(sp)
+        ld      s6, 48(sp)
+        ld      s5, 40(sp)
+        ld      s4, 32(sp)
+        ld      s3, 24(sp)
+        ld      s2, 16(sp)
+        ld      s1, 8(sp)
+        ld      s0, 0(sp)
+        addi    sp, sp, 72
 
-
-
-
-
-
-
-
-                ret
+        ret

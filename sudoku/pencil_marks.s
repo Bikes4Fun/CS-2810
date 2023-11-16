@@ -163,14 +163,10 @@ pencil_marks:
         li      s2, 0             # changed
         li      s3, 0             # group_start
         li      s4, 243           # iterate max
-        li      s5, 0             # group/start
+        li      s5, 0             # group
         #temps: t1 = start...
     1:  bgt     s3, s4, 2f        # if s3 > 27*9 then target
         add     s5, s1, s3        # address of start(s5) = (table(s1) + group_start(s3))
-        #lb      t1, 0(s5)         # load value at start(+iter) address
-        #slli    t1, t1, 1         # t1 = t1 shifted 1 times
-        #add     t1, s0, t1        # ???
-        #lh      t1, 0(t1)
         mv      a1, s5
         mv      a0, s0
         call get_used
