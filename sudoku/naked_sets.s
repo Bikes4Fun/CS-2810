@@ -145,9 +145,9 @@ single_pass:
         mv      s3, a0          # subset is saved for comparing later
 
     #   call    gather_set:     gather candidates in the pencil marks for those cells set of pencil marks for cells identified by key
-        mv      a0, s0          # put board into a0 to call gather_set
-        mv      a1, s1          # put group into a1 to call gather_set
-        mv      a2, s2          # the key(iteration?) passed to gather_set?
+        mv      a0, s0          # board into a0 to call gather_set
+        mv      a1, s1          # group into a1 to call gather_set
+        mv      a2, s3          # key(iteration?) passed to gather_set? or subset?
         call    gather_set
         #mv      s4, a0         shouldn't need to save this?
         
@@ -155,10 +155,10 @@ single_pass:
         call    count_bits      # use return from gather_set which is already in a0?
         mv      s6, a0          # candidate = count_bits second time with gather_set return, obtaining 'candidate'
        
-    #   If      sets match:     continue, else break (matches size of the candidate set:
+    #   If      sets match:     continue, else: break
         bne     s3, s6, 2f      #calculate next iteration?
         
-    #   call    clear_others:   cross values off any other cells: 0: no change / 1: changed
+    #   call    clear_others:   cross values off cells: 0(no change) 1(changed)
         mv      a0, s0          # should be board
         mv      a1, s1          # should be group
         mv      a2, s2          # s2 should be key/iter
