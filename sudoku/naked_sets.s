@@ -147,7 +147,7 @@ single_pass:
     #   call    gather_set:     gather candidates in the pencil marks for those cells set of pencil marks for cells identified by key
         mv      a0, s0          # board into a0 to call gather_set
         mv      a1, s1          # group into a1 to call gather_set
-        mv      a2, s3          # key(iteration?) passed to gather_set? or subset?
+        mv      a2, s2          # key(iteration?) passed to gather_set? or subset?
         call    gather_set
         #mv      s4, a0         shouldn't need to save this?
         
