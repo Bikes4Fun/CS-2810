@@ -129,7 +129,7 @@ single_pass:
         #a1     group
         mv      s0, a0          # saved board
         mv      s1, a1          # saved group
-        li      s2, 0           # iteration(key)?
+        li      s2, 1           # iteration(key)?
         #mv     s3, a0          # bits from key: return of first count_bits(key) call
         #don't need. nvm this is subset? mv s4, a0  # gathered set, return of gather_set(board, group, key) call
         li      s5, 0           # changes
@@ -147,7 +147,7 @@ single_pass:
     #   call    gather_set:     gather candidates in the pencil marks for those cells set of pencil marks for cells identified by key
         mv      a0, s0          # board into a0 to call gather_set
         mv      a1, s1          # group into a1 to call gather_set
-        mv      a2, s2          # key(iteration?) passed to gather_set? or subset?
+        mv      a2, s3          # key(iteration?) passed to gather_set? or counted key?
         call    gather_set
         mv      s4, a0          #shouldn't need to save this?(possibly the error)
         
@@ -162,7 +162,7 @@ single_pass:
         mv      a0, s0          # should be board
         mv      a1, s1          # should be group
         mv      a2, s3          # s2 should be key/iter? (changed to counted bits of iter)
-        mv      a3, s3          # s3 should be subset/current set? nvm s3 was bits in the key, s4 is subset?
+        mv      a3, s4          # s3 should be subset/current set? nvm s3 was bits in the key, s4 is subset?
         call    clear_others
         beqz    a0, 2f          # if 0(no change) perform iteration
         li      s5, 1
