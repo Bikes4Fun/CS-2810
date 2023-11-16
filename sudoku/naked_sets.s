@@ -130,10 +130,10 @@ single_pass:
         mv      s0, a0          # saved board
         mv      s1, a1          # saved group
         li      s2, 0           # iteration(key)?
-        #mv     s3, a0          # subset: return of first count_bits(key) call
-        #don't need? mv     s4, a0          # gathered set, return of gather_set(board, group, key) call
+        #mv     s3, a0          # bits from key: return of first count_bits(key) call
+        #don't need. nvm this is subset? mv s4, a0  # gathered set, return of gather_set(board, group, key) call
         li      s5, 0           # changes
-        #mv     s6, a0          # second call to count_bits?
+        #mv     s6, a0          # second call to count_bits? this is candidate set?
         li      s7, 510         # max iteration
 
     1:  #main   iteration       0-510 inclusive
@@ -147,22 +147,22 @@ single_pass:
     #   call    gather_set:     gather candidates in the pencil marks for those cells set of pencil marks for cells identified by key
         mv      a0, s0          # board into a0 to call gather_set
         mv      a1, s1          # group into a1 to call gather_set
-        mv      a2, s3          # key(iteration?) passed to gather_set? or subset?
+        mv      a2, s2          # key(iteration?) passed to gather_set? or subset?
         call    gather_set
-        #mv      s4, a0         shouldn't need to save this?
+        mv      s4, a0          #shouldn't need to save this?(possibly the error)
         
     #   call    count_bits:     on gathered to see the combined number of candidate values used by that subset
         call    count_bits      # use return from gather_set which is already in a0?
         mv      s6, a0          # candidate = count_bits second time with gather_set return, obtaining 'candidate'
        
     #   If      sets match:     continue, else: break
-        bne     s3, s6, 2f      #calculate next iteration?
+        bne     s4, s6, 2f      #calculate next iteration?
         
     #   call    clear_others:   cross values off cells: 0(no change) 1(changed)
         mv      a0, s0          # should be board
         mv      a1, s1          # should be group
         mv      a2, s2          # s2 should be key/iter
-        mv      a3, s3          # s3 should be subset/current set?
+        mv      a3, s4          # s3 should be subset/current set? nvm s3 was bits in the key, s4 is subset?
         call    clear_others
         beqz    a0, 2f          # if 0(no change) perform iteration
         li      s5, 1
