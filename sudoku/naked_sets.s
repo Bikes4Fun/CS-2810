@@ -161,7 +161,7 @@ single_pass:
     #   call    clear_others:   cross values off cells: 0(no change) 1(changed)
         mv      a0, s0          # should be board
         mv      a1, s1          # should be group
-        mv      a2, s2          # s2 should be key/iter? (changed to counted bits of iter)
+        mv      a2, s3          # s2 should be key/iter? (changed to counted bits of iter)
         mv      a3, s3          # s3 should be subset/current set? nvm s3 was bits in the key, s4 is subset?
         call    clear_others
         beqz    a0, 2f          # if 0(no change) perform iteration
