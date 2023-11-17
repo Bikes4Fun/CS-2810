@@ -34,34 +34,35 @@ guess:
         
         li      t1, 9           # max_guess
         
-        #mask = slli     mask, guess, 1
+        #mask = slli mask, guess, 1
         #cell_value = board[position_value]
 
     1:  #while loop over guesses (1 to 9)
         li      t1, 9
-        bgt     s4, t1, end      # while guess <= max_guess: 
+        bgt     s4, t1, 3f      # while guess <= max_guess: 
         slli    s5, s4, 1
         
-        and     s5, s5, s3
-        
+        and     s5, s5, cell_value   # if (cell_value & mask)
+        ##if    s5: then: 
         mv      a0, s0
         mv      a1, s1
         call    guess           #(guess, position)
 
-        #Set cell to the guess value
-        #board[position] = mask
+        #board[position] = mask  #Set cell to the guess value
 
         mv      a0, s0
         mv      a1, s1
         call    solve
-        bnez    a0, continue
+        
+        bnez    a0, 2f
         li      a0, 0
         ret
 
-    continue:
-        addi    s4, s4, 1    
+    2:
+        addi    s4, s4, 1 
+        j       1b   
 
-    no_solution:
+    3:
         li      a0, 1
         ret
 
