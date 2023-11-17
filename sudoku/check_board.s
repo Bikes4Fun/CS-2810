@@ -32,9 +32,9 @@ check_board:
         ## if: count_bits returns 0: li 10, -1 and return
         ## else: iterate++, jump to while loop
 
-    1:  bge     s1, s4, 3f
-	mv	t0, s1
-	slli	t0, t0, 1
+1:      bge     s1, s4, 3f
+	    mv	    t0, s1
+	    slli	t0, t0, 1
         add     s5, s0, t0
         lh      a0, (s5)
         call    count_bits
@@ -43,19 +43,19 @@ check_board:
         li      s3, -1
         j       3f
 
-    2:  li      t0, 1
+2:      li      t0, 1
         beq     t0, a0, 4f      # if bits == 1, reiterate and don't change shit
         bge     a0, s2, 4f      # if bits >= to current lowest bits (and > 1)
         mv      s2, a0
         mv      s3, s1          # move address of lesser bits into most constrained address
 
-    4:  addi    s1, s1, 1
+4:      addi    s1, s1, 1
         j       1b
 
-    3:  # calculate return
+3:      # calculate return
         mv      a0, s3
 
-    # postlude
+# postlude
         ld      ra, 64(sp)
         ld      s7, 56(sp)
         ld      s6, 48(sp)
@@ -68,4 +68,4 @@ check_board:
         addi    sp, sp, 72
 
 
-    ret
+        ret

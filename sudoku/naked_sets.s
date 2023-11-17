@@ -5,13 +5,13 @@
 #   set of pencil marks for cells identified by key
 gather_set:
     # gather_set(board, group, key)
-        #     set = 0
-        #     for index = 0; index < 9; index++
-        #         #if key & (1<<index) != 0
-        #             board_index = group[index]
-        #             elt = board[board_index]
-        #             set = set | elt
-    #     return set
+        # set = 0
+        # for index = 0; index < 9; index++
+        #   #if key & (1<<index) != 0
+        #      board_index = group[index]
+        #      elt = board[board_index]
+        #      set = set | elt
+    # return set
 
         #a0 = board
         #a1 = group
@@ -21,7 +21,7 @@ gather_set:
         li      a5, 9        # max iter
         li      a6, 1        # shifted index times
 
-    1:  bge     a4, a5, 2f
+1:      bge     a4, a5, 2f
         and     t0, a2, a6    # put the tester value of key and shifted value into temp
         beqz    t0, 3f        # if the anded key and shift mask == 0, perform iteration calculations cand mrestart
 
@@ -35,12 +35,12 @@ gather_set:
         #set = set union (OR) element at board[board_index]
         or      a3, a3, t2
 
-    3:  # index ++, lli a6, a6, 1 or sll a6, index?
+3:      # index ++, lli a6, a6, 1 or sll a6, index?
         addi     a4, a4, 1
         slli     a6, a6, 1
         j        1b
 
-    2:  mv a0, a3          # move set to return register
+2:      mv      a0, a3          # move set to return register
         ret
 
 # clear_others(board, group, key, set) ->
@@ -51,49 +51,47 @@ clear_others:
         # changed = 0
         # notset = ~set (flip all the bits)
         # for index = 0; index < 9; index++
-        #     #if key & (1<<index) == 0
-        #         board_index = group[index]
-        #         elt = board[board_index]
-        #         new_elt = elt & notset
-        #         #if elt != new_elt
-        #             board[board_index] = new_elt
-        #             changed = 1
+        #    #if key & (1<<index) == 0
+        #        board_index = group[index]
+        #        elt = board[board_index]
+        #        new_elt = elt & notset
+        #        #if elt != new_elt
+        #           board[board_index] = new_elt
+        #           changed = 1
     # return changed
 
-    #a0,                # board
-        #a1,                # group
-        #a2,                # key
-        #a3,                # set
+        #a0     board
+        #a1     group
+        #a2     key
+        #a3     set
 
-        li      a4, 0            # change
-        li      a5, 0            # iter
-        li      a6, 1            # shifter
+        li      a4, 0           # change
+        li      a5, 0           # iter
+        li      a6, 1           # shifter
         not     a7, a3          # not_set = ~set
 
     # main loop
-    1:  li      t0, 9            # iter max
-        bge     a5, t0, 2f     # return calculations
+1:      li      t0, 9           # iter max
+        bge     a5, t0, 2f      # return calculations
         and     t0, a2, a6      # key && shifter
 
-        bnez    t0, 3f         # if key && shifter == 0: continue, else calculate iteration
+        bnez    t0, 3f          # if key && shifter == 0: continue, else calculate iteration
         add     t1, a1, a5      # group + iter (address saved for later)
-        lb      t1, 0(t1)        # (group+iter)[0]
-        slli    t1, t1, 1      # add+lb+slli collectively = 'elt'
+        lb      t1, 0(t1)       # (group+iter)[0]
+        slli    t1, t1, 1       # add+lb+slli collectively = 'elt'
         add     t1, t1, a0
-        lh      t2, 0(t1)      # element
+        lh      t2, 0(t1)       # element
 
         and     t3, t2, a7      # new_elt = elt && not_set
         beq     t3, t2, 3f      # if elt == new_elt, continue, else calculate nextiteration
         sh      t3, (t1)
-        li      a4, 1            # changed = True
+        li      a4, 1           # changed = True
 
-    # iteration calculation
-    3:  addi    a5, a5, 1
+3:      addi    a5, a5, 1
         slli    a6, a6, 1
         j 1b    # jump to target
 
-    # return calculation
-    2:  mv      a0, a4
+2:      mv      a0, a4
         ret
 
 
@@ -111,7 +109,7 @@ single_pass:
             # *   call `clear_others` to cross those values off any other cells
     # Track and return if changes occured (clear_others)
 
-    # prelude:
+#       prelude:
         addi    sp, sp, -72
         sd      ra, 64(sp)
         sd      s7, 56(sp)
@@ -123,8 +121,7 @@ single_pass:
         sd      s1, 8(sp)
         sd      s0, 0(sp)
 
-    #set variables/registers
-        #s2-s11
+#       set variables/registers
         #a0     board
         #a1     group
         mv      s0, a0          # saved board
@@ -136,29 +133,29 @@ single_pass:
         #mv     s6, a0          # second call to count_bits? this is candidate set?
         li      s7, 510         # max iteration
 
-    1:  #main   iteration       1-510 inclusive
+1:      #main   iteration       1-510 inclusive
         bgt     s2, s7, 3f
 
-    #   call    count_bits:     on the key to see how big the subset is #of bits set in n (only counting bits 0-9 inclusive)
+#       call    count_bits:     on the key to see how big the subset is #of bits set in n (only counting bits 0-9 inclusive)
         mv      a0, s2          # iteration value 1-510 = key. move to a0 as argument for count_bits
         call    count_bits
         mv      s3, a0          # subset is saved for comparing later
 
-    #   call    gather_set:     gather candidates in the pencil marks for those cells set of pencil marks for cells identified by key
+#       call    gather_set:     gather candidates in the pencil marks for those cells set of pencil marks for cells identified by key
         mv      a0, s0          # board into a0 to call gather_set
         mv      a1, s1          # group into a1 to call gather_set
         mv      a2, s2          # key(iteration?) passed to gather_set? or counted key?
         call    gather_set
         mv      s4, a0          #shouldn't need to save this?(possibly the error)
 
-    #   call    count_bits:     on gathered to see the combined number of candidate values used by that subset
+#       call    count_bits:     on gathered to see the combined number of candidate values used by that subset
         call    count_bits      # use return from gather_set which is already in a0?
         mv      s6, a0          # candidate = count_bits second time with gather_set return, obtaining 'candidate'
 
-    #   If      sets match:     continue, else: break
+#       If      sets match:     continue, else: break
         bne     s3, s6, 2f      #calculate next iteration?
 
-    #   call    clear_others:   cross values off cells: 0(no change) 1(changed)
+#       call    clear_others:   cross values off cells: 0(no change) 1(changed)
         mv      a0, s0          # should be board
         mv      a1, s1          # should be group
         mv      a2, s2          # s2 should be key/iter? (changed to counted bits of iter)
@@ -167,13 +164,13 @@ single_pass:
         beqz    a0, 2f          # if 0(no change) perform iteration
         li      s5, 1
 
-    2:  #iter   calculations
+2:      #iter   calculations
         addi    s2, s2, 1
         j       1b
 
-    3:  mv      a0, s5          # if changes from clear others
+3:      mv      a0, s5          # if changes from clear others
 
-    # postlude
+#       postlude
         ld      ra, 64(sp)
         ld      s7, 56(sp)
         ld      s6, 48(sp)
@@ -184,8 +181,7 @@ single_pass:
         ld      s1, 8(sp)
         ld      s0, 0(sp)
         addi    sp, sp, 72
-
-    ret
+        ret
 
 # naked_sets(board, table) -> 0: no change, 1: changed
 naked_sets:
@@ -200,7 +196,7 @@ naked_sets:
             #j iteration
     # return: mv a0, changes
 
-    # prelude:
+#       prelude:
         addi    sp, sp, -72
         sd      ra, 64(sp)
         sd      s7, 56(sp)
@@ -212,8 +208,7 @@ naked_sets:
         sd      s1, 8(sp)
         sd      s0, 0(sp)
 
-    #set variables/registers
-        #s2-s11
+#       variables
         #a0     board
         #a1     table
         mv      s0, a0
@@ -223,7 +218,7 @@ naked_sets:
         li      s4, 234         # max iteration/max group index
         li      s5, 0           # changes
 
-    1:  # while loop
+1:      # while loop
         bgt     s2, s4, 3f
         add     s3, s2, s1
         mv      a0, s0
@@ -233,14 +228,14 @@ naked_sets:
         beqz    a0, 2f
         li      s5, 1
 
-    2:  # calculate next loop
+2:      # calculate next loop
         addi    s2, s2, 9
         j       1b
 
-    3:  # calculate return
+3:      # calculate return
         mv      a0, s5
 
-    # postlude
+#       postlude
         ld      ra, 64(sp)
         ld      s7, 56(sp)
         ld      s6, 48(sp)
@@ -251,5 +246,4 @@ naked_sets:
         ld      s1, 8(sp)
         ld      s0, 0(sp)
         addi    sp, sp, 72
-
-    ret
+        ret
