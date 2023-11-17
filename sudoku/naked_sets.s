@@ -189,7 +189,7 @@ single_pass:
 
 # naked_sets(board, table) -> 0: no change, 1: changed
 naked_sets:
-    # iteration: bgt, group_index, 243, return 
+    # iteration: bgt, group_index, 243, return
             # add (group_value) = table, group_index
             # mv a0, s0
             # mv a1, group_address
@@ -220,7 +220,7 @@ naked_sets:
         mv      s1, a1
         li      s2, 0           # group_index
         li      s3, 0           # group_address
-        li      s4, 243         # max iteration/max group index
+        li      s4, 234         # max iteration/max group index
         li      s5, 0           # changes
 
     1:  # while loop
@@ -229,9 +229,9 @@ naked_sets:
         mv      a0, s0
         mv      a1, s3
         call    single_pass
-        
+
         beqz    a0, 2f
-        li      s5, 1  
+        li      s5, 1
 
     2:  # calculate next loop
         addi    s2, s2, 9
