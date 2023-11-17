@@ -22,30 +22,36 @@ check_board:
         #s2-s11
         #a0     board
         mv      s0, a0
-        mv      s1, a0          # iterated board
+        li      s1, 0           # iterated board
         li      s2, 10          # most constrained count
         li      s3, 81          # iterate / most constrained index
-        addi    s4, a0, 81      # kill loop
+        li      s4, 81          # kill loop
+
         ## while iterate < 81:
         ## board value = board+iterator, lh[0]? mv, a0, board_value
         ## if: count_bits returns 0: li 10, -1 and return
         ## else: iterate++, jump to while loop
 
     1:  bge     s1, s4, 3f
-        lh      a0, (s1)
+        add     s5, s5, s1
+        lh      a0, (s5)
         call    count_bits
+        
         bnez    a0, 2f
         li      s3, -1
         j       3f
-        
-    2:  bge     a0, s2, 4f      # if bits are greater or == to current lowest bits
+
+    2:  li      t0, 1
+        beq     t0, a0, 4f      # if bits == 1, reiterate and don't change shit
+        bge     a0, s2, 4f      # if bits >= to current lowest bits (and > 1)
         mv      s2, a0
-        sub     s3, s1, s0      # move address of lesser bits into most constrained address
-    
+        mv      s3, s1          # move address of lesser bits into most constrained address
+        
     4:  addi    s1, s1, 1
         j       1b
 
     3:  # calculate return
+        b
         mv      a0, s3
 
     # postlude
