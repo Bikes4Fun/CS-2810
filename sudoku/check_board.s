@@ -33,10 +33,12 @@ check_board:
         ## else: iterate++, jump to while loop
 
     1:  bge     s1, s4, 3f
-        add     s5, s0, s1
+	mv	t0, s1
+	slli	t0, t0, 1
+        add     s5, s0, t0
         lh      a0, (s5)
         call    count_bits
-        
+
         bnez    a0, 2f
         li      s3, -1
         j       3f
@@ -46,7 +48,7 @@ check_board:
         bge     a0, s2, 4f      # if bits >= to current lowest bits (and > 1)
         mv      s2, a0
         mv      s3, s1          # move address of lesser bits into most constrained address
-        
+
     4:  addi    s1, s1, 1
         j       1b
 
@@ -65,5 +67,5 @@ check_board:
         ld      s0, 0(sp)
         addi    sp, sp, 72
 
-    
+
     ret
