@@ -230,7 +230,7 @@ naked_sets:
         mv      a1, s3
         call    single_pass
         
-        bnez    a0, 2f
+        beqz    a0, 2f
         li      s5, 1  
 
     2:  # calculate next loop
