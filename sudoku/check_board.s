@@ -33,7 +33,7 @@ check_board:
         ## else: iterate++, jump to while loop
 
     1:  bge     s1, s4, 3f
-        add     s5, s5, s1
+        add     s5, s0, s1
         lh      a0, (s5)
         call    count_bits
         

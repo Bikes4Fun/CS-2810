@@ -1,28 +1,37 @@
 Check board
 ===========
 
-81.  The board is fully solved
--1.  The board is unsolvable (there are cells with no pencil marks left)
-0-80.  The board is unsolved, but may still be solvable.
+After naked sets calculations are complete, we need to be able to
+evaluate a Sudoku board. We are interested in three possible states:
 
-check_board(board):
-    -1: board is unsolvable
-    0-80: position of most-constrained cell
-    81: board is solved
+1.  The board is fully solved
+2.  The board is unsolvable (there are cells with no pencil marks left)
+3.  The board is unsolved, but may still be solvable.
 
-in the file `check_board.s`.
+In the third case, we will continue the solving process (in the next
+step) by making a guess on one of the unsolved cells and trying to
+solve the board that results. To maximize our chances of guessing
+correctly, we will choose the cell with the fewest remaining pencil
+marks, calling it the *most constrained* cell.
 
-scan the entire board
+Write the function:
 
-count pencil marks in each cell.
-If any cell has 0 pencil marks, return -1.
-If all cells == 1 bit: board solved, return 81.
+    check_board(board) ->
+        -1: board is unsolvable
+        0-80: position of most-constrained cell
+        81: board is solved
 
-else: return index of the unsolved cell
-    with the fewest pencil marks.
-    
-In the event of a tie:
-    return the first index with the fewest pencil marks (0-80).
+in the file `check_board.s`. It should scan the entire board and
+count the number of pencil marks in each cell. If all of the cells
+are solved (they each have exactly one pencil mark value), then
+return 81. If even a single cell has zero pencil marks, return -1.
+In the remaining case, return the index of the unsolved cell with
+the fewest pencil marks. In the event of a tie, return the lowest
+index number of a cell with the fewest pencil marks.
+
+Note that this can be implemented as a leaf function (if you write a
+loop to count the pencil marks) or you can write it as a non-leaf
+function and call your `count_bits` function.
 
 This function examines all positions of the board, but it does not
 care about rows, columns, and boxes, so there is no need to use the
