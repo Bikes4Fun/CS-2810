@@ -26,13 +26,13 @@ check_board:
         li      s2, 10          # most constrained count
         li      s3, 81          # iterate / most constrained index
         li      s4, 0           # kill value
-
+	li	s5, 81		#
         ## while iterate < 81:
         ## board value = board+iterator, lh[0]? mv, a0, board_value
         ## if: count_bits returns 0: li 10, -1 and return
         ## else: iterate++, jump to while loop
 
-    1:  bge     s1, 81, 3f
+    1:  bge     s1, s5, 3f
         addi    s0, s0, 1
         lh      a0, (s0)
         call    count_bits
