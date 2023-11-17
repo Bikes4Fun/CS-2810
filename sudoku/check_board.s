@@ -51,7 +51,6 @@ check_board:
         j       1b
 
     3:  # calculate return
-        b
         mv      a0, s3
 
     # postlude
