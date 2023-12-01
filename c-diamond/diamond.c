@@ -1,6 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+void print_line(int space, int star){
+    for (int i = 0; i < space; i++) {
+        printf(" ");
+    }
+    for (int i = 0; i < star; i++){
+        printf("*");
+    }
+    printf("\n");
+}
+
 void print_diamond(int n){
     if (n == 1){
         printf("*\n");
@@ -8,12 +19,11 @@ void print_diamond(int n){
     }
     else {
         //char *star = malloc(n+1);
-        char *spaces = malloc(n+n+1);
         for (int i = 0; i < n; i++){
             spaces[i] = ' ';
-            //printf("%s\n", spaces);
         }
         spaces[n-1]='*';
+        spaces[n] = '\0';
         printf("%s\n", spaces);
         spaces[n]= '*';
         int i = 1;
@@ -26,12 +36,9 @@ void print_diamond(int n){
         for (i = n; i > 0; i--) {
             spaces[n-i] = ' ';
             spaces[n+i] = '\n'; 
-            
+
             printf("%s", spaces);
         }
-
-
-        //printf("\n");
         free(spaces);
     }
 }
