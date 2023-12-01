@@ -1,6 +1,5 @@
 #include <stdio.h>
 
-void print_line(int space, int start);
 void print_diamond(int);
 
 int main(void) {
