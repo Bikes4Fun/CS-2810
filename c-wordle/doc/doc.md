@@ -1,122 +1,73 @@
-Word list
----------
+Parsing guesses
+---------------
 
-This problem has five steps. In the first step you will read a list
-of 5-letter words from the file `words.txt`, where each word appears
-on a line by itself, into an array of strings. The end result should
-be an array of strings, which looks something like this:
+In this step you will write a function `parse_guess` in the file
+`parse.c` to parse a single guess with the feedback that the game
+gives. In the original game, colors are used to give feedback on a
+guess:
 
-```
-       +--------+
-    0: | char * | --> "aahed"
-       +--------+
-    1: | char * | --> "aalii"
-       +--------+
-    2: | char * | --> "aargh"
-       +--------+
-    3: | char * | --> "aarti"
-       +--------+
-    4: | char * | --> "abaca"
-       +--------+
-    5: | char * | --> "abaci"
-       +--------+
-       |...     |
-       +--------+
-12970: | char * | --> "zymes"
-       +--------+
-12971: | char * | --> "zymic"
-       +--------+
-       | NULL   |
-       +--------+
-```
+*   Green: the letter is correct and in the correct position
+*   Yellow: the letter appears in the word, but it was in the wrong
+    position
+*   Gray: the letter does not appear at all in the word
 
-The type of this array is `char **`, meaning it is an array of
-string pointers.
-
-
-### `read_word_list`
-
-Define the function `read_word_list` in the file `wordlist.c` to
-match the prototype in `wordle.h`.
-
-You should not assume the length of the list in advance, instead you
-should increase the size of the array when needed. Track three
-values as you read the array into memory:
-
-1.  The array itself
-2.  The number of elements in the array (its length)
-3.  The maximum number of elements in the array (its capacity)
-
-Start by picking a reasonable starting capacity (say, 32) and use
-`malloc` to allocate an array of that size (remember to multiply the
-capacity of the array by the size of each element and give that
-total size in bytes to `malloc`).
-
-Each time you read a new word from the file, you should check if
-there is room for it in the current array (if the length is less than
-the capacity). If not, double the capacity and use `realloc` to
-double the size of the underlying array. Use `man realloc` to see
-how to use it.
-
-To open a file given its file name, use the `fopen` function:
+In `wordle.h` there is a type `guess` defined:
 
 ``` c
-FILE *fp = fopen(filename, "r");
+enum feedback { MISS, EXACT_HIT, PARTIAL_HIT };
+typedef struct {
+    char letters[6];
+    enum feedback feedback[5];
+} guess;
 ```
 
-If it returns `NULL` then something went wrong, but otherwise it is
-ready to use. Note that you do not need to know anything about the
-structure of a `FILE` object, you just need to keep track of the
-pointer to it. To read a single line, use something like:
+The `letters` attribute holds the guess itself (with a terminating
+null) and `feedback` holds the “color” of each letter as an `enum`:
 
-``` c
-char line[16];
-if (fgets(line, 16, fp) == NULL) { /* something went wrong */ }
-```
+*   `MISS`: a gray letter (does not appear in solution word)
+*   `EXACT_HIT`: a green letter (correct letter in correct position)
+*   `PARTIAL_HIT`: a yellow letter (correct letter in incorrect
+    position)
 
-`fgets` gets a line of text from `fp`, up to 16 bytes total and
-stores it in `line`. It returns `NULL` if there is an error or if
-you have reached the end of the file. You may assume that it
-indicates the end of file and use that as your signal to stop
-reading.
+You will be given a line of input to parse. Here is an example of a
+guess with feedback as it will be given to you:
 
-You should verify that the line is exactly 5 letters plus a newline
-character (and report an error otherwise). Because it is storing
-data in the `line` array and you will keep re-using that array to
-read new lines, you must allocate space for each word using
-`malloc`. Be sure to allocate enough space for the word (WITHOUT the
-trailing newline character) and a terminating null character. You
-can copy the word into place using `strcpy` (see the man page for
-details).
+    [s]t(e)(a)m
 
-When you reach the end of the file, you should add one more entry to
-the end of the array (make sure that you save room for one extra
-entry). Use a `NULL` pointer to mark the end of the array, similar
-to how a null character marks the end of a string.
+All letters will be lower case. If a letter is surrounded by square
+brackets (`[s]` in the example) then it is an `EXACT_HIT`. If it is
+surrounded by parentheses (`(e)` and `(a)` in the example) then it
+is a `PARTIAL_HIT`. An unadorned letter is a `MISS`.
 
-Close the file using `fclose(fp)` when you are finished with it and
-before you return. Return the pointer to the beginning of the array
-of results.
+Your job is to parse a line of input and return a `guess` that has
+been correctly filled in based on the input. Note that you are
+expected to return `guess` by value, not a pointer to a `guess`. You
+should ensure that the `letters` attribute has a terminating null
+so that it can be treated as either an array of exactly five letters
+or as a string of five letters.
 
 
-### `free_word_list`
+### Hints
 
-Since `read_word_list` allocates memory dynamically with `malloc`
-and `realloc`, you are responsible for returning that memory to the
-system using `free` before your code returns. Implement the function
-`free_word_list` in the file `word_list.c` as prototyped in
-`wordle.h`. It should do the following:
+There are no library functions that will make this significantly
+easier—you are probably better off examining the characters of the
+input directly.
 
-*   Call `free(str)` for each pointer in the array of strings (once
-    for each word that you allocated space for using `malloc`).
+*   To test if a character is a lower-case letter, you can compare
+    it with 'a' and 'z':
 
-*   Call `free` one last time on the array itself.
+        if (ch >= 'a' && ch <= 'z') { ... }
 
-Once it passes all of the tests for correct output, test it again
-using:
+*   You will expect exactly five inputs, but you do not know in
+    advance how many characters to expect for each letter. A `for`
+    loop will work well for walking over the five positions that you
+    need to fill in for the `guess` (both the `letters` and the
+    `feedback`), but you should probably track your position in the
+    input string separately and advance that cursor as needed:
 
-    make valgrind
-
-This will run it with a memory testing tool that will check if you
-correctly freed all of your memory and closed your open file. It
-should report no errors before you move on.
+    *   Start with a pointer to the beginning of the line of input
+    *   Check for each of the three possible cases, fill in the
+        `letter` and `feedback` entries based on what you find, then
+        add one or three to the pointer (depending on how many
+        characters you used) so the next iteration of the loop will
+        know where to continue parsing.

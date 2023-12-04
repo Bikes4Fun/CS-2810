@@ -1,20 +1,2 @@
 <?xml version='1.0' encoding='utf-8'?>
-<testsuites tests="1" failures="1" disabled="0" skipped="0" errors="0" time="0.006155967712402344"><testsuite tests="1" failures="1" disabled="0" skipped="0" errors="0" time="0.006155967712402344"><testcase name="inputs/words.input" time="0.01331186294555664" status="failed"><failure type="failure">./a.out &lt; inputs/words.input
-
-!!! output is incorrect:
-diff inputs/words.actual inputs/words.expected1a2,14
-&gt; word 0: aahed
-&gt; word 1000: berth
-&gt; word 2000: chuts
-&gt; word 3000: doris
-&gt; word 4000: fouds
-&gt; word 5000: herns
-&gt; word 6000: kutis
-&gt; word 7000: mitis
-&gt; word 8000: pases
-&gt; word 9000: recon
-&gt; word 10000: sider
-&gt; word 11000: synod
-&gt; word 12000: users
-
-</failure></testcase></testsuite></testsuites>
+<testsuites tests="1" failures="0" disabled="0" skipped="0" errors="0" time="0.0073511600494384766"><testsuite tests="1" failures="0" disabled="0" skipped="0" errors="0" time="0.0073511600494384766"><testcase name="inputs/words.input" time="0.008276939392089844" /></testsuite></testsuites>

@@ -1,122 +1,81 @@
-<html><head></head><body><h2>Word list</h2>
+<html><head></head><body><h2>Parsing guesses</h2>
 
-<p>This problem has five steps. In the first step you will read a list
-of 5-letter words from the file <code>words.txt</code>, where each word appears
-on a line by itself, into an array of strings. The end result should
-be an array of strings, which looks something like this:</p>
-
-<pre><code>       +--------+
-    0: | char * | --&gt; &#34;aahed&#34;
-       +--------+
-    1: | char * | --&gt; &#34;aalii&#34;
-       +--------+
-    2: | char * | --&gt; &#34;aargh&#34;
-       +--------+
-    3: | char * | --&gt; &#34;aarti&#34;
-       +--------+
-    4: | char * | --&gt; &#34;abaca&#34;
-       +--------+
-    5: | char * | --&gt; &#34;abaci&#34;
-       +--------+
-       |...     |
-       +--------+
-12970: | char * | --&gt; &#34;zymes&#34;
-       +--------+
-12971: | char * | --&gt; &#34;zymic&#34;
-       +--------+
-       | NULL   |
-       +--------+
-</code></pre>
-
-<p>The type of this array is <code>char **</code>, meaning it is an array of
-string pointers.</p>
-
-<h3><code>read_word_list</code></h3>
-
-<p>Define the function <code>read_word_list</code> in the file <code>wordlist.c</code> to
-match the prototype in <code>wordle.h</code>.</p>
-
-<p>You should not assume the length of the list in advance, instead you
-should increase the size of the array when needed. Track three
-values as you read the array into memory:</p>
-
-<ol>
-<li>The array itself</li>
-<li>The number of elements in the array (its length)</li>
-<li>The maximum number of elements in the array (its capacity)</li>
-</ol>
-
-<p>Start by picking a reasonable starting capacity (say, 32) and use
-<code>malloc</code> to allocate an array of that size (remember to multiply the
-capacity of the array by the size of each element and give that
-total size in bytes to <code>malloc</code>).</p>
-
-<p>Each time you read a new word from the file, you should check if
-there is room for it in the current array (if the length is less than
-the capacity). If not, double the capacity and use <code>realloc</code> to
-double the size of the underlying array. Use <code>man realloc</code> to see
-how to use it.</p>
-
-<p>To open a file given its file name, use the <code>fopen</code> function:</p>
-
-<pre><code class="language-c">FILE *fp = fopen(filename, &#34;r&#34;);
-</code></pre>
-
-<p>If it returns <code>NULL</code> then something went wrong, but otherwise it is
-ready to use. Note that you do not need to know anything about the
-structure of a <code>FILE</code> object, you just need to keep track of the
-pointer to it. To read a single line, use something like:</p>
-
-<pre><code class="language-c">char line[16];
-if (fgets(line, 16, fp) == NULL) { /* something went wrong */ }
-</code></pre>
-
-<p><code>fgets</code> gets a line of text from <code>fp</code>, up to 16 bytes total and
-stores it in <code>line</code>. It returns <code>NULL</code> if there is an error or if
-you have reached the end of the file. You may assume that it
-indicates the end of file and use that as your signal to stop
-reading.</p>
-
-<p>You should verify that the line is exactly 5 letters plus a newline
-character (and report an error otherwise). Because it is storing
-data in the <code>line</code> array and you will keep re-using that array to
-read new lines, you must allocate space for each word using
-<code>malloc</code>. Be sure to allocate enough space for the word (WITHOUT the
-trailing newline character) and a terminating null character. You
-can copy the word into place using <code>strcpy</code> (see the man page for
-details).</p>
-
-<p>When you reach the end of the file, you should add one more entry to
-the end of the array (make sure that you save room for one extra
-entry). Use a <code>NULL</code> pointer to mark the end of the array, similar
-to how a null character marks the end of a string.</p>
-
-<p>Close the file using <code>fclose(fp)</code> when you are finished with it and
-before you return. Return the pointer to the beginning of the array
-of results.</p>
-
-<h3><code>free_word_list</code></h3>
-
-<p>Since <code>read_word_list</code> allocates memory dynamically with <code>malloc</code>
-and <code>realloc</code>, you are responsible for returning that memory to the
-system using <code>free</code> before your code returns. Implement the function
-<code>free_word_list</code> in the file <code>word_list.c</code> as prototyped in
-<code>wordle.h</code>. It should do the following:</p>
+<p>In this step you will write a function <code>parse_guess</code> in the file
+<code>parse.c</code> to parse a single guess with the feedback that the game
+gives. In the original game, colors are used to give feedback on a
+guess:</p>
 
 <ul>
-<li><p>Call <code>free(str)</code> for each pointer in the array of strings (once
-for each word that you allocated space for using <code>malloc</code>).</p></li>
-
-<li><p>Call <code>free</code> one last time on the array itself.</p></li>
+<li>Green: the letter is correct and in the correct position</li>
+<li>Yellow: the letter appears in the word, but it was in the wrong
+position</li>
+<li>Gray: the letter does not appear at all in the word</li>
 </ul>
 
-<p>Once it passes all of the tests for correct output, test it again
-using:</p>
+<p>In <code>wordle.h</code> there is a type <code>guess</code> defined:</p>
 
-<pre><code>make valgrind
+<pre><code class="language-c">enum feedback { MISS, EXACT_HIT, PARTIAL_HIT };
+typedef struct {
+    char letters[6];
+    enum feedback feedback[5];
+} guess;
 </code></pre>
 
-<p>This will run it with a memory testing tool that will check if you
-correctly freed all of your memory and closed your open file. It
-should report no errors before you move on.</p>
+<p>The <code>letters</code> attribute holds the guess itself (with a terminating
+null) and <code>feedback</code> holds the “color” of each letter as an <code>enum</code>:</p>
+
+<ul>
+<li><code>MISS</code>: a gray letter (does not appear in solution word)</li>
+<li><code>EXACT_HIT</code>: a green letter (correct letter in correct position)</li>
+<li><code>PARTIAL_HIT</code>: a yellow letter (correct letter in incorrect
+position)</li>
+</ul>
+
+<p>You will be given a line of input to parse. Here is an example of a
+guess with feedback as it will be given to you:</p>
+
+<pre><code>[s]t(e)(a)m
+</code></pre>
+
+<p>All letters will be lower case. If a letter is surrounded by square
+brackets (<code>[s]</code> in the example) then it is an <code>EXACT_HIT</code>. If it is
+surrounded by parentheses (<code>(e)</code> and <code>(a)</code> in the example) then it
+is a <code>PARTIAL_HIT</code>. An unadorned letter is a <code>MISS</code>.</p>
+
+<p>Your job is to parse a line of input and return a <code>guess</code> that has
+been correctly filled in based on the input. Note that you are
+expected to return <code>guess</code> by value, not a pointer to a <code>guess</code>. You
+should ensure that the <code>letters</code> attribute has a terminating null
+so that it can be treated as either an array of exactly five letters
+or as a string of five letters.</p>
+
+<h3>Hints</h3>
+
+<p>There are no library functions that will make this significantly
+easier—you are probably better off examining the characters of the
+input directly.</p>
+
+<ul>
+<li><p>To test if a character is a lower-case letter, you can compare
+it with &#39;a&#39; and &#39;z&#39;:</p>
+
+<pre><code>if (ch &gt;= &#39;a&#39; &amp;&amp; ch &lt;= &#39;z&#39;) { ... }
+</code></pre></li>
+
+<li><p>You will expect exactly five inputs, but you do not know in
+advance how many characters to expect for each letter. A <code>for</code>
+loop will work well for walking over the five positions that you
+need to fill in for the <code>guess</code> (both the <code>letters</code> and the
+<code>feedback</code>), but you should probably track your position in the
+input string separately and advance that cursor as needed:</p>
+
+<ul>
+<li>Start with a pointer to the beginning of the line of input</li>
+<li>Check for each of the three possible cases, fill in the
+<code>letter</code> and <code>feedback</code> entries based on what you find, then
+add one or three to the pointer (depending on how many
+characters you used) so the next iteration of the loop will
+know where to continue parsing.</li>
+</ul></li>
+</ul>
 </body></html>
