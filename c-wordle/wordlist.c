@@ -30,19 +30,27 @@ char **read_word_list(char *filename) {
     char **word_list = malloc(32*word_bytes);       // allocate memory for array of pointers
     int num_word_elements = 0;                      // track number of word in array
     int word_list_capacity = 32*word_bytes;         // track amount of memory that was allocated for word_list array
+    char line[16];
     FILE *word_file = fopen(filename, "r");                // open file?
+    bool line_null = (fgets(line, 16, word_file) == NULL);
     //read file
     //for each line in file
     //check if num_word_elements < word_list_capacity
-    if ((num_word_elements*word_bytes) < word_list_capacity) {
-        ;
-    }
-    else {
-        word_list_capacity *= 2;
-        //realloc **word_list *= 2;
-    }
+    do {
+        if ((num_word_elements*word_bytes) < word_list_capacity) {
+            if ((sizeof(line) < 5) && (line[5] == '\n')) { //psuedocode: if size of line is 5 char and a \n
+                char *word;
+                strcpy(word, line);// add to array 
+                num_word_elements ++;
+            }
+        }
+        else {
+            word_list_capacity *= 2;
+            word_list = realloc(word_list, 32*word_bytes);
+        }
+        fgets(line, 16, word_file);
+    } while (line_null);
 
-    num_word_elements ++;
     fclose(word_file);
     return word_list;
 }
