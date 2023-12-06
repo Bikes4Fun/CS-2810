@@ -1,73 +1,67 @@
-Parsing guesses
----------------
+Testing if a word is a viable guess
+-----------------------------------
 
-In this step you will write a function `parse_guess` in the file
-`parse.c` to parse a single guess with the feedback that the game
-gives. In the original game, colors are used to give feedback on a
-guess:
+Given a list of prior guesses and feedback on them, in this step you
+will test if a word is a potential solution that incorporates all
+feedback. For example, given this sequence of guesses and feedback:
 
-*   Green: the letter is correct and in the correct position
-*   Yellow: the letter appears in the word, but it was in the wrong
-    position
-*   Gray: the letter does not appear at all in the word
+    a(r)i(s)(e)
+    [r]o(u)t(e)
 
-In `wordle.h` there is a type `guess` defined:
+You would reject `super` (it has valid letters but does not have an
+'r' in the first position) and you would accept `rules` (it has an
+'r' as the first letter, a 'u' that is not the third letter, an
+'e' that is not the last letter, an 's' that is not the fourth
+letter, and it does not contain 'a', 'i', 'o', or 't').
+
+In the file `is_viable.c` write a function `is_viable_candidate`
+that matches the prototype in `wordle.h`.
+
+You are given a candidate word to test and the list of guesses (with
+a count so you know how many there are). I suggest the following
+approach:
+
+*   Loop over the guesses and try to eliminate the candidate and if
+    you can find a reason to rule it out return false
+*   If none of the information learned from prior guesses makes this
+    candidate invalid, then return true
+
+For each guess that you are considering, start by making a copy of
+the candidate into a local variable (you can use `strcpy`):
 
 ``` c
-enum feedback { MISS, EXACT_HIT, PARTIAL_HIT };
-typedef struct {
-    char letters[6];
-    enum feedback feedback[5];
-} guess;
+char copy[6];
+strcpy(copy, candidate);
 ```
 
-The `letters` attribute holds the guess itself (with a terminating
-null) and `feedback` holds the “color” of each letter as an `enum`:
+This will allow you to cross letters off the word (see below)
+without losing the original word.
 
-*   `MISS`: a gray letter (does not appear in solution word)
-*   `EXACT_HIT`: a green letter (correct letter in correct position)
-*   `PARTIAL_HIT`: a yellow letter (correct letter in incorrect
-    position)
+Now perform a series of tests in order:
 
-You will be given a line of input to parse. Here is an example of a
-guess with feedback as it will be given to you:
+1.  Loop over the five letters of the guess and check for
+    `EXACT_HIT` letters. If you find one and the corresponding
+    position in the candidate is a mismatch, return false. If it is
+    a match, cross it off the candidate (put a non-letter character
+    like a '_' in that position).
 
-    [s]t(e)(a)m
+2.  Loop over the five letters of the guess again and check for
+    `PARTIAL_HIT` letters. When you find one, check if the candidate
+    has a matching letter in the same position. If so, return false.
 
-All letters will be lower case. If a letter is surrounded by square
-brackets (`[s]` in the example) then it is an `EXACT_HIT`. If it is
-surrounded by parentheses (`(e)` and `(a)` in the example) then it
-is a `PARTIAL_HIT`. An unadorned letter is a `MISS`.
+3.  Loop over the five letters again and check for `PARTIAL_HIT`
+    letters again. This time, when you find one scan all five
+    positions of the candidate to look for a match. If you find one,
+    cross it off (as before) and break out of the loop (you do not
+    want to inadvertently cross it off twice in two different
+    positions). If you do not find the letter anywhere, then return
+    false.
 
-Your job is to parse a line of input and return a `guess` that has
-been correctly filled in based on the input. Note that you are
-expected to return `guess` by value, not a pointer to a `guess`. You
-should ensure that the `letters` attribute has a terminating null
-so that it can be treated as either an array of exactly five letters
-or as a string of five letters.
+4.  Loop over the five letters again, this time looking for `MISS`
+    letters. When you find one in the guess, scan all the positions
+    in the candidate and make sure there are no matches. If you find
+    a match, return false.
 
-
-### Hints
-
-There are no library functions that will make this significantly
-easier—you are probably better off examining the characters of the
-input directly.
-
-*   To test if a character is a lower-case letter, you can compare
-    it with 'a' and 'z':
-
-        if (ch >= 'a' && ch <= 'z') { ... }
-
-*   You will expect exactly five inputs, but you do not know in
-    advance how many characters to expect for each letter. A `for`
-    loop will work well for walking over the five positions that you
-    need to fill in for the `guess` (both the `letters` and the
-    `feedback`), but you should probably track your position in the
-    input string separately and advance that cursor as needed:
-
-    *   Start with a pointer to the beginning of the line of input
-    *   Check for each of the three possible cases, fill in the
-        `letter` and `feedback` entries based on what you find, then
-        add one or three to the pointer (depending on how many
-        characters you used) so the next iteration of the loop will
-        know where to continue parsing.
+This sequencing will correctly handle words with the same letter
+appearing twice. Try following the procedure by hand on a few
+examples to make sure you understand how it works.
