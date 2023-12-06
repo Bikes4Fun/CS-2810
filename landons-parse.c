@@ -12,13 +12,13 @@ guess parse_guess(char *line) {
               char meme = *arrow;
               if(meme == '['){
                      //Exact hit
-                     guess.letters[i] = *(arrow+1);
+                     guess.letters[i] = *(arrow =1);
                      guess.feedback[i] = EXACT_HIT;
                      arrow += 3;
               }
               else if(meme == '('){
                      //Partial hit
-                     guess.letters[i] = *(arrow+1);
+                     guess.letters[i] = *(arrow +1);
                      guess.feedback[i] = PARTIAL_HIT;
                      arrow += 3;
               }

@@ -1,2 +1,2 @@
 <?xml version='1.0' encoding='utf-8'?>
-<testsuites tests="1" failures="0" disabled="0" skipped="0" errors="0" time="0.0073511600494384766"><testsuite tests="1" failures="0" disabled="0" skipped="0" errors="0" time="0.0073511600494384766"><testcase name="inputs/words.input" time="0.008276939392089844" /></testsuite></testsuites>
+<testsuites tests="3" failures="0" disabled="0" skipped="0" errors="0" time="0.01681208610534668"><testsuite tests="3" failures="0" disabled="0" skipped="0" errors="0" time="0.01681208610534668"><testcase name="inputs/a.input" time="0.007252931594848633" /><testcase name="inputs/b.input" time="0.005626678466796875" /><testcase name="inputs/c.input" time="0.005673885345458984" /></testsuite></testsuites>
