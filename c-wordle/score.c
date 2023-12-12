@@ -42,4 +42,3 @@ int score(char **word_list, char *candidate, guess *guesses, int guess_count) {
 
     return total_score;
 }
-

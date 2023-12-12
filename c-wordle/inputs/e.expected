@@ -1,21 +1,20 @@
-candidate "bolls" has score 372
-candidate "colls" has score 377
-candidate "colly" has score 377
-candidate "dolls" has score 377
-candidate "dolly" has score 377
-candidate "folly" has score 372
-candidate "golly" has score 372
-candidate "jolls" has score 377
-candidate "jolly" has score 377
-candidate "lolls" has score 375
-candidate "lolly" has score 375
-candidate "molla" has score 337
-candidate "molls" has score 382
-candidate "molly" has score 382
-candidate "nolls" has score 372
-candidate "polls" has score 377
-candidate "polly" has score 377
-candidate "rolls" has score 372
-candidate "tolls" has score 377
-candidate "tolly" has score 377
-candidate "wolly" has score 372
+382: molls
+382: molly
+377: colls
+377: colly
+377: dolls
+377: dolly
+377: jolls
+377: jolly
+377: polls
+377: polly
+377: tolls
+377: tolly
+375: lolls
+375: lolly
+372: bolls
+372: folly
+372: golly
+372: nolls
+372: rolls
+372: wolly

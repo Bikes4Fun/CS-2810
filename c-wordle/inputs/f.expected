@@ -1,12 +1,12 @@
-candidate "allod" has score 170
-candidate "allot" has score 171
-candidate "allow" has score 170
-candidate "alloy" has score 172
-candidate "lilos" has score 141
-candidate "lolog" has score 142
-candidate "molal" has score 138
-candidate "ollas" has score 147
-candidate "ollav" has score 141
-candidate "salol" has score 152
-candidate "tolyl" has score 126
-candidate "xylol" has score 145
+172: alloy
+171: allot
+170: allod
+170: allow
+152: salol
+147: ollas
+145: xylol
+142: lolog
+141: lilos
+141: ollav
+138: molal
+126: tolyl

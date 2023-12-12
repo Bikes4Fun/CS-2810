@@ -11,10 +11,7 @@ int main(void) {
         guesses[guess_count++] = parse_guess(line);
     }
 
-    for (char **words = word_list; *words; words++) {
-        if (is_viable_candidate(*words, guesses, guess_count))
-            printf("candidate \"%s\" has score %d\n", *words, score(word_list, *words, guesses, guess_count));
-    }
+    recommend(word_list, guesses, guess_count);
 
     free_word_list(word_list);
     return 0;

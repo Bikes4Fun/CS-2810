@@ -1,9 +1,9 @@
-candidate "rebus" has score 137
-candidate "resus" has score 135
-candidate "rubes" has score 173
-candidate "rudes" has score 168
-candidate "ruers" has score 147
-candidate "rules" has score 168
-candidate "rumes" has score 168
-candidate "runes" has score 168
-candidate "ruses" has score 171
+173: rubes
+171: ruses
+168: rudes
+168: rules
+168: rumes
+168: runes
+147: ruers
+137: rebus
+135: resus

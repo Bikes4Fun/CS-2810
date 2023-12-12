@@ -1,5 +1,5 @@
-candidate "aldol" has score 60
-candidate "local" has score 84
-candidate "loral" has score 84
-candidate "loyal" has score 85
-candidate "lysol" has score 70
+85: loyal
+84: local
+84: loral
+70: lysol
+60: aldol
