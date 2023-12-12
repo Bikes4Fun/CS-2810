@@ -5,7 +5,7 @@
 #include "wordle.h"
 
 bool is_viable_candidate (char *candidate, guess *guesses, int guess_count){
-    for (int i = 0; i <= guess_count; i++){
+    for (int i = 0; i < guess_count; i++){
         char copy[6];
         strcpy(copy, candidate);
 
@@ -16,7 +16,14 @@ bool is_viable_candidate (char *candidate, guess *guesses, int guess_count){
                 }
                 copy[j] = '_';
             }
-        }
+            for (int j = 0; j < 5; j++){
+                if (guesses[i].feedback[j] == PARTIAL_HIT){
+                    if (copy[j] == guesses[i].letters[j]){
+                        return false;
+                    }
+                }
+            }   
+        }   
         for (int j = 0; j < 5; j++){
             if (guesses[i].feedback[j] == PARTIAL_HIT){
                 int a = 0;
