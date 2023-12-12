@@ -10,7 +10,7 @@ bool is_viable_candidate (char *candidate, guess *guesses, int guess_count){
         strcpy(copy, candidate);
 
         for (int j = 0; j < 5; j++){
-            if(guesses[i].feedback[j] = EXACT_HIT){
+            if (guesses[i].feedback[j] == EXACT_HIT){
                 if (copy[j] != guesses[i].letters[j]){
                     return false;
                 }
@@ -21,7 +21,7 @@ bool is_viable_candidate (char *candidate, guess *guesses, int guess_count){
             if (guesses[i].feedback[j] == PARTIAL_HIT){
                 int a = 0;
                 for (int k = 0; k < 5; k++){
-                    if copy[k] == guesses[i].letters[j]){
+                    if (copy[k] == guesses[i].letters[j]){
                         copy[k] = '_';
                         a = 1;
                         break;
@@ -35,7 +35,7 @@ bool is_viable_candidate (char *candidate, guess *guesses, int guess_count){
         for (int j = 0; j < 5; j++){
             if (guesses[i].feedback[j] == MISS){
                 for (int k = 0; k < 5; k++){
-                    if (copy[k] == guesses[i].letter[j]){
+                    if (copy[k] == guesses[i].letters[j]){
                         return false;
                     }
                 }
