@@ -13,7 +13,7 @@ int main(void) {
 
     for (char **words = word_list; *words; words++) {
         if (is_viable_candidate(*words, guesses, guess_count))
-            printf("viable candidate: %s\n", *words);
+            printf("candidate \"%s\" has score %d\n", *words, score(word_list, *words, guesses, guess_count));
     }
 
     free_word_list(word_list);

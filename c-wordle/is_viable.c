@@ -22,8 +22,8 @@ bool is_viable_candidate (char *candidate, guess *guesses, int guess_count){
                         return false;
                     }
                 }
-            }   
-        }   
+            }
+        }
         for (int j = 0; j < 5; j++){
             if (guesses[i].feedback[j] == PARTIAL_HIT){
                 int a = 0;

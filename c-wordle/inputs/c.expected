@@ -1,15 +1,15 @@
-viable candidate: drive
-viable candidate: frize
-viable candidate: gride
-viable candidate: grike
-viable candidate: grime
-viable candidate: gripe
-viable candidate: grize
-viable candidate: pride
-viable candidate: prime
-viable candidate: prize
-viable candidate: tride
-viable candidate: trike
-viable candidate: tripe
-viable candidate: trite
-viable candidate: write
+candidate "drive" has score 238
+candidate "frize" has score 245
+candidate "gride" has score 266
+candidate "grike" has score 260
+candidate "grime" has score 260
+candidate "gripe" has score 263
+candidate "grize" has score 265
+candidate "pride" has score 258
+candidate "prime" has score 252
+candidate "prize" has score 257
+candidate "tride" has score 263
+candidate "trike" has score 257
+candidate "tripe" has score 260
+candidate "trite" has score 255
+candidate "write" has score 244

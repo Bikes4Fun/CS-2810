@@ -1,67 +1,52 @@
-Testing if a word is a viable guess
------------------------------------
+Scoring a candidate word
+------------------------
 
-Given a list of prior guesses and feedback on them, in this step you
-will test if a word is a potential solution that incorporates all
-feedback. For example, given this sequence of guesses and feedback:
+In this step you will take a potential next guess, compare it
+against all words in the word list, and come up with a score for how
+good a guess it is. We will use a very simple scoring mechanism:
 
-    a(r)i(s)(e)
-    [r]o(u)t(e)
+*   If a word in the list is not viable according to the
+    `is_viable_candidate` function, ignore it and move on to the
+    next word.
 
-You would reject `super` (it has valid letters but does not have an
-'r' in the first position) and you would accept `rules` (it has an
-'r' as the first letter, a 'u' that is not the third letter, an
-'e' that is not the last letter, an 's' that is not the fourth
-letter, and it does not contain 'a', 'i', 'o', or 't').
+*   For a viable word in the list, assume it is the solution to the
+    puzzle and give the guess a simple score based on that
+    assumption:
 
-In the file `is_viable.c` write a function `is_viable_candidate`
-that matches the prototype in `wordle.h`.
+    *   Give 5 points for every letter that would appear green
+    *   Give 1 point for every letter that would appear yellow
+    *   Give 0 points for every letter that would appear gray
 
-You are given a candidate word to test and the list of guesses (with
-a count so you know how many there are). I suggest the following
-approach:
+*   Repeat this test for every word in the word list and return the
+    sum of all the scores.
 
-*   Loop over the guesses and try to eliminate the candidate and if
-    you can find a reason to rule it out return false
-*   If none of the information learned from prior guesses makes this
-    candidate invalid, then return true
+The scoring method is pretty unsophisticated and arbitrary,
+especially in the choice of 5 and 1 points. These constant values
+are defined in `wordle.h` and you should use `EXACT_HIT_POINTS` and
+`PARTIAL_HIT_POINTS` instead of 5 and 1, respectively.
 
-For each guess that you are considering, start by making a copy of
-the candidate into a local variable (you can use `strcpy`):
+In the file `score.c` write the function `score` to match the
+prototype given in `wordle.h`.
 
-``` c
-char copy[6];
-strcpy(copy, candidate);
-```
+You are given the entire word list (since you need to find and score
+every viable word), the candidate guess, and the list of prior
+guesses with its count.
 
-This will allow you to cross letters off the word (see below)
-without losing the original word.
+Loop over the words in the word list and test each one using
+`is_viable_candidate`. If the word is not viable, skip it and move
+on. For a viable word:
 
-Now perform a series of tests in order:
+*   Make a local copy so you cross letters off
 
-1.  Loop over the five letters of the guess and check for
-    `EXACT_HIT` letters. If you find one and the corresponding
-    position in the candidate is a mismatch, return false. If it is
-    a match, cross it off the candidate (put a non-letter character
-    like a '_' in that position).
+*   Loop over the 5 positions of the candidate and look for exact
+    hits (under the assumption that the copied word from the list is
+    the solution). If the candidate and the copy have a match in the
+    same position, cross it off the copy and add 5 to the score.
 
-2.  Loop over the five letters of the guess again and check for
-    `PARTIAL_HIT` letters. When you find one, check if the candidate
-    has a matching letter in the same position. If so, return false.
+*   Loop over the 5 positions again looking for partial hits. For
+    each letter in the candidate, scan all 5 letters in the copy. If
+    you find a match, cross it off the copy and add 1 to the score.
+    Be sure to break out of the loop as well so you do not count a
+    letter twice.
 
-3.  Loop over the five letters again and check for `PARTIAL_HIT`
-    letters again. This time, when you find one scan all five
-    positions of the candidate to look for a match. If you find one,
-    cross it off (as before) and break out of the loop (you do not
-    want to inadvertently cross it off twice in two different
-    positions). If you do not find the letter anywhere, then return
-    false.
-
-4.  Loop over the five letters again, this time looking for `MISS`
-    letters. When you find one in the guess, scan all the positions
-    in the candidate and make sure there are no matches. If you find
-    a match, return false.
-
-This sequencing will correctly handle words with the same letter
-appearing twice. Try following the procedure by hand on a few
-examples to make sure you understand how it works.
+Return the sum of all the scores that you find for viable words.

@@ -1,5 +1,5 @@
-viable candidate: aldol
-viable candidate: local
-viable candidate: loral
-viable candidate: loyal
-viable candidate: lysol
+candidate "aldol" has score 60
+candidate "local" has score 84
+candidate "loral" has score 84
+candidate "loyal" has score 85
+candidate "lysol" has score 70
